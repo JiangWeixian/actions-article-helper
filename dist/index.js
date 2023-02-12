@@ -11163,25 +11163,6 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 3865:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-function wait(milliseconds) {
-    return new Promise(function (resolve) {
-        if (typeof milliseconds !== 'number') {
-            throw new TypeError('milliseconds not a number');
-        }
-        setTimeout(function () { return resolve('done!'); }, milliseconds);
-    });
-}
-exports.default = wait;
-
-
-/***/ }),
-
 /***/ 1710:
 /***/ ((module) => {
 
@@ -11375,30 +11356,24 @@ var tslib_1 = __nccwpck_require__(5394);
 var core = tslib_1.__importStar(__nccwpck_require__(7535));
 var github = tslib_1.__importStar(__nccwpck_require__(3666));
 var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
-var wait_1 = tslib_1.__importDefault(__nccwpck_require__(3865));
+// import { template } from 'lodash-es'
 var debug = (0, debug_1.default)('neo:article-helper');
 var COMMENT_AUTHOR = new Set(['github-actions[bot]']);
-var PREFIX = '<!--article-helper-->';
+var prefix = '<!--article-helper-->';
 var findComment = function (comments) {
-    return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(PREFIX)); });
+    return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(prefix)); });
 };
 var withLeadPrefix = function (body) {
-    return "".concat(PREFIX, "\n").concat(body);
+    return "".concat(prefix, "\n").concat(body);
 };
 function main() {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var ms, token, octokit, _a, owner, repo, number, comments, comment, error_1;
+        var token, octokit, _a, owner, repo, number, comments, comment, error_1;
         return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 7, , 8]);
-                    ms = core.getInput('milliseconds');
-                    core.info("Waiting ".concat(ms, " milliseconds ..."));
-                    core.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-                    return [4 /*yield*/, (0, wait_1.default)(parseInt(ms))];
-                case 1:
-                    _b.sent();
-                    core.info(new Date().toTimeString());
+                    _b.trys.push([0, 6, , 7]);
+                    debug('start actions');
                     token = process.env.GITHUB_TOKEN;
                     if (!token) {
                         throw new Error('Github token is required.');
@@ -11412,38 +11387,38 @@ function main() {
                             repo: repo,
                             issue_number: number,
                         })];
-                case 2:
+                case 1:
                     comments = _b.sent();
                     console.log(JSON.stringify(comments.data, null, 2));
                     comment = findComment(comments.data);
-                    console.log(JSON.stringify(comment, null, 2));
-                    if (!comment) return [3 /*break*/, 4];
+                    debug('find comment %o', comment);
+                    if (!comment) return [3 /*break*/, 3];
                     return [4 /*yield*/, octokit.rest.issues.updateComment({
                             owner: owner,
                             repo: repo,
                             comment_id: comment === null || comment === void 0 ? void 0 : comment.id,
                             body: withLeadPrefix("Hello world ".concat(Date.now())),
                         })];
-                case 3:
+                case 2:
                     _b.sent();
-                    return [3 /*break*/, 6];
-                case 4: return [4 /*yield*/, octokit.rest.issues.createComment({
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, octokit.rest.issues.createComment({
                         owner: owner,
                         repo: repo,
                         issue_number: number,
                         body: withLeadPrefix('hello world'),
                     })];
-                case 5:
+                case 4:
                     _b.sent();
-                    _b.label = 6;
-                case 6:
+                    _b.label = 5;
+                case 5:
                     core.setOutput('time', new Date().toTimeString());
-                    return [3 /*break*/, 8];
-                case 7:
+                    return [3 /*break*/, 7];
+                case 6:
                     error_1 = _b.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });

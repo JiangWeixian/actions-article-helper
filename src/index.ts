@@ -1,11 +1,13 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
-import wait from './wait'
+// import { template } from 'lodash-es'
 
 const debug = Debug('neo:article-helper')
+
 const COMMENT_AUTHOR = new Set(['github-actions[bot]'])
-const PREFIX = '<!--article-helper-->'
+const prefix = '<!--article-helper-->'
+// const prompts = template('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is "<%= content %>"')
 
 export interface Comment {
   id: number
@@ -17,22 +19,16 @@ export interface Comment {
 }
 
 const findComment = (comments: Comment[]) => {
-  return comments.find(comment => comment.user?.login && COMMENT_AUTHOR.has(comment.user?.login) && comment.body?.includes(PREFIX))
+  return comments.find(comment => comment.user?.login && COMMENT_AUTHOR.has(comment.user?.login) && comment.body?.includes(prefix))
 }
 
 const withLeadPrefix = (body: string) => {
-  return `${PREFIX}\n${body}`
+  return `${prefix}\n${body}`
 }
 
 async function main() {
   try {
-    const ms = core.getInput('milliseconds')
-    core.info(`Waiting ${ms} milliseconds ...`)
-
-    core.debug(new Date().toTimeString()) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms))
-    core.info(new Date().toTimeString())
-
+    debug('start actions')
     const token = process.env.GITHUB_TOKEN
     if (!token) {
       throw new Error('Github token is required.')
@@ -50,7 +46,7 @@ async function main() {
     console.log(JSON.stringify(comments.data, null, 2))
     // find comments by bot<github_actioins> start with `<!--article-helper-->`
     const comment = findComment(comments.data)
-    console.log(JSON.stringify(comment, null, 2))
+    debug('find comment %o', comment)
     if (comment) {
       await octokit.rest.issues.updateComment({
         owner,
