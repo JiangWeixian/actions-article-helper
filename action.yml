@@ -1,10 +1,9 @@
 name: Issue article helper
 description: Check article grammar with chatgpt
 inputs:
-  milliseconds: # id of input
-    description: number of milliseconds to wait
+  delimiters: # id of input
+    description: gray matter delimiters
     required: false
-    default: "1000"
 runs:
   using: "node16"
   main: "dist/index.js"

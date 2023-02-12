@@ -1,6 +1,8 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
+import matter from 'gray-matter'
+
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
 
@@ -23,6 +25,14 @@ const withLeadPrefix = (body: string) => {
   return `${prefix}\n${body}`
 }
 
+const parseArticle = (body: string) => {
+  const meta = matter(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined })
+  return {
+    ...meta,
+    data: meta.data,
+  }
+}
+
 async function main() {
   try {
     debug('start actions')
@@ -40,7 +50,12 @@ async function main() {
       owner,
       repo,
     })
-    const article = prompts({ content: issue.data.body })
+    if (!issue.data.body) {
+      core.info('issue body is empty, skip.')
+      return
+    }
+    const issueBody = parseArticle(issue.data.body!)
+    const article = prompts({ content: issueBody.content })
     const chatgptApi = createChatGPTAPI(apiKey)
     const result = await chatgptApi.sendMessage(article, {
       stream: true,

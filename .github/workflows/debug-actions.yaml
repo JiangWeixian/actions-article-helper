@@ -17,6 +17,8 @@ jobs:
         node-version: 16
     - name: debug actions
       uses: ./
+      with:
+        delimiters: "[\"<!--\", \"-->\"]"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEBUG: neo:article-helper
