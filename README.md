@@ -2,6 +2,10 @@
 
 If you write article in github issue like me, you can use this action to *check issue article grammar*.
 
+![screenshot](https://pbs.twimg.com/media/Foxfv3GagAAHChH?format=jpg&name=medium)
+
+This actions will comment check result under issue.
+
 ## usage
 
 ```yaml
