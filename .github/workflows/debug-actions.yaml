@@ -1,0 +1,22 @@
+name: "debug actions"
+on:
+  issues:
+    types:
+      - "opened"
+      - "edited"
+
+jobs:
+  # unit tests
+  units:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+    - name: debug actions
+      uses: actions-chatgpt-article-review@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
