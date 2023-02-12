@@ -22,19 +22,31 @@ async function main() {
     const { owner, repo } = github.context.repo
     const { number } = github.context.issue
     debug('issue context %o', github.context.issue)
-    octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: number,
-      body: 'hello world',
-    })
     // list all <number> comments to find specific comments
     const comments = await octokit.rest.issues.listComments({
       owner,
       repo,
       issue_number: number,
     })
-    console.log(comments)
+    console.log(JSON.stringify(comments.data, null, 2))
+    // find comments by bot<github_actioins> start with `<!--article-helper-->`
+    const comment = comments.data.find(comment => comment.user?.login === 'github_actions' && comment.body?.includes('<!--article-helper-->'))
+    console.log(JSON.stringify(comment, null, 2))
+    if (comment) {
+      await octokit.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: comment?.id,
+        body: `Hello world ${Date.now()}`,
+      })
+    } else {
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: number,
+        body: 'hello world',
+      })
+    }
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {

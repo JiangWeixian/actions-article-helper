@@ -11379,11 +11379,11 @@ var wait_1 = tslib_1.__importDefault(__nccwpck_require__(3865));
 var debug = (0, debug_1.default)('neo:article-helper');
 function main() {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var ms, token, octokit, _a, owner, repo, number, comments, error_1;
+        var ms, token, octokit, _a, owner, repo, number, comments, comment, error_1;
         return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 3, , 4]);
+                    _b.trys.push([0, 5, , 6]);
                     ms = core.getInput('milliseconds');
                     core.info("Waiting ".concat(ms, " milliseconds ..."));
                     core.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
@@ -11399,12 +11399,6 @@ function main() {
                     _a = github.context.repo, owner = _a.owner, repo = _a.repo;
                     number = github.context.issue.number;
                     debug('issue context %o', github.context.issue);
-                    octokit.rest.issues.createComment({
-                        owner: owner,
-                        repo: repo,
-                        issue_number: number,
-                        body: 'hello world',
-                    });
                     return [4 /*yield*/, octokit.rest.issues.listComments({
                             owner: owner,
                             repo: repo,
@@ -11412,14 +11406,27 @@ function main() {
                         })];
                 case 2:
                     comments = _b.sent();
-                    console.log(comments);
-                    core.setOutput('time', new Date().toTimeString());
-                    return [3 /*break*/, 4];
+                    console.log(JSON.stringify(comments.data, null, 2));
+                    comment = comments.data.find(function (comment) { var _a, _b; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) === 'github_actions' && ((_b = comment.body) === null || _b === void 0 ? void 0 : _b.includes('<!--article-helper-->')); });
+                    console.log(JSON.stringify(comment, null, 2));
+                    if (!comment) return [3 /*break*/, 4];
+                    return [4 /*yield*/, octokit.rest.issues.updateComment({
+                            owner: owner,
+                            repo: repo,
+                            comment_id: comment === null || comment === void 0 ? void 0 : comment.id,
+                            body: "Hello world ".concat(Date.now()),
+                        })];
                 case 3:
+                    _b.sent();
+                    return [3 /*break*/, 4];
+                case 4:
+                    core.setOutput('time', new Date().toTimeString());
+                    return [3 /*break*/, 6];
+                case 5:
                     error_1 = _b.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
