@@ -1,139 +1,159 @@
-I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is "<!--
-cover: https://realme-ten.vercel.app/api/v1/banner.svg?title=rollup-plugin-condition-exports&subtitle=%E2%9A%A1&desc=File+system+based+api+exports.&colorA=7c2d12&colorB=c2410c&textColor=fb923c
-description: Like front-end framework routes convention? Now you can write library like that ⚡️.
--->
+I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article content is "## Why start build my blog in 2022
 
-## Introduction
+For a long time, I always shame to express myself in public. Either in terms of ideas or what I was doing. However, I dream to be fulltime open-source developer or a freelance. I know It's a tough, but no doubt, #build-in-public is the first step.
 
-The feature of modern front-end framework which I like most is filesystem based routes. It make define routes easier. If you familar with `next.js`, you may define routes like that: 
+#build-in-public not only help you [validate your ideas](https://blog.pragmaticengineer.com/how-to-become-a-full-time-creator/,), it can also [make you lucky area became larger](https://github.com/readme/guides/publishing-your-work).
 
-```sh
-./pages
-├── index.tsx
-└── issues
-    ├── id
-    │   └── [id].tsx
-    └── index.tsx
+In here, I will share my ideas and attemps, and of course what I created.
 
-```
+First thing I want share is *How I build my blog site in 2022*.
 
-- `pages/index.tsx` equal `/`
-- `pages/issues/index.tsx` equal `/issues`
-- `pages/issues/id/[id].tsx` equal `/issues/id/:id`
+## How it work
 
-From `nodejs@12`, nodejs introduce a new feature called `condition-exports`, it make developers define package subexports much easier, e.g.
+### Requirements
 
-```json
-"name": "pkg-name",
-"exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    },
-   "./feature": {
-      "require": "./dist/feature.cjs",
-      "import": "./dist/feature.mjs",
-      "types": "./dist/feature.d.ts"
-    }
- }
-```
+The reason I did't choose any popluar blog building tool, but start from scratch was that I wanted to take control of my site.
 
-With `condition-exports`, users can use `feature` via `import feature from "pkg-name/feature"`. `feature` is exported api from `pkg-name`. If you used `lodash` before, `lodash` provides lots of apis, you may import one like this: 
+When I was new to front-end, I choose `vuepress` to build my site. Everytime, I create a new post or edit a post, I have to `pull & commit & push` on my computer over and over again. Even `vuepress` is great tool, but I can't get focus on writing in this way.
+
+So I have some hard requirements for this blog site: I should focus on writing itself, and I want to be able to edit my content whenever and wherever I want.
+
+### Stacks
+
+I choose the following tech stack to build my site:
+
+- `Next.js` I much familiar with it than other framework. Another main reason is `ISR`, I will talk about how it work later.
+- `tailwind` It's awesome
+- `stitches` I used to use `styled-components` as my `CSS-in-JS` solution. When I meet `stitches`, I love much type safe API design. Currently, I use `stitches` with `tailwind` as my style solution.
+- `mayumi` A MacOS style UI libray, created by me.
+- `github issue` I like use `github issue `as my datasets. Because it's a dataset with a visual interface. Not only that, when you link another issue in issue content, you can find it looks like duplicate link.
+
+### Next.js ISR
+
+Back to `Next.js`, maybe it's hardest part in my blog site. I choose [`ISR`](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration) instead of `SSR`. `ISR` is something like the advanced version of `SSG`. For a blog site, lots of blog posts is much more "static", it's very suited to ISR.
+
+If you can go through this website for a while, there are two main parts in this blog site
+
+- `/issues` list all available posts(already published to public)
+- `/issues/[id]` display post content
+
+The great part of `ISR` is that, when I create a new post, it will re-update `/issues` and `/issues/[id]` at backend; If I only edit issue content, I can choose to re-update `/issues/[id]` page via  API `unstable_revalidate()`. 
 
 ```ts
-import { isObject } from "lodash"
-```
-
-Webpack will bundle all lodash apis into finial bundled code, to reduce bundle size, developers always use it with `babel-plugin-import` to import used apis.  
-
-## New tool
-
-`Nodejs` condition exports has similar pattern systax like `router`, so why not use it in library project? Now you can use `rollup-plugin-condition-exports@next` to make library develop happier.
-
-By default, files agreed to be in folder `src/exports` will setup `exports` field in `package.json`, e.g.
-
-```sh
-├── button
-│   ├── button.ts
-└── index.ts
-```
-
-will convert into
-
-```json
-{
-  "name": "pkg-name",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts",
-    },
-    "./button": {
-      "import": "./dist/button/index.mjs",
-      "require": "./dist/button/index.cjs",
-      "types": "./dist/button/index.d.ts",
-    },
-    "./package.json": "./package.json",
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "button": [
-        "dist/button/index.d.ts",
-      ],
-    },
-  },
+// /pages/api/revalidate
+// ...
+console.log('[Next.js] Revalidating /issues')
+await res.unstable_revalidate('/issues')
+if (issueNumber) {
+  console.log(`[Next.js] Revalidating /issues/id/${issueNumber}`)
+  await res.unstable_revalidate(`/issues/id/${issueNumber}`)
 }
+// ...
 ```
 
-In addition to this, nodejs supports `condition-names`, you can define different apis in `node` side and `browser` side. It will be useful if you maintain a package export same api both in `node & browser` side, but with different behaviours in `node` and `browser` side
+I create a API route `/pages/api/revalidate` to update `/issues` or `/issues/[id]` manually. Get rid of the hell of repeated manual deployments over and over again.
 
-For example, you probably export api called `isServer`, it return `false` in browser, and return `true` in node. A common solution is to use `typeof window` to detect context type during runtime. However it will make webpack treeshaking failed.
+***But How do I know the time to call `/revalidate`***
 
-With `Nodejs` condition exports, you can rewrite into that: 
+Remember, all my blog is saved in github issues. When I edit issue, github will trigger a event signal to invoke valid workflows. I can call `unstable_revalidate` in the following github workflow. 
 
-```json
-{
-  "name": "pkg-name",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts",
+```yaml
+name: Revalidate
+on:
+  issues:
+    types: ["opened", "edited", "labeled", "deleted", "closed", "reopened"]
+  push:
+    branches: ["main", "master"]
+  label:
+jobs:
+  Revalidate:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: revalidate
+         uses: actions/github-script@v6
+         env:
+           AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+         with:
+           script: |
+             // revalidate `/issues` page
+```
+
+I can `edit/create/delete` post anytime and anywhere.
+
+## Rich content
+
+A normal github issue could display like
+
+```
+<!--
+cover: image-url
+description: short description of content
+-->
+
+// write main content here
+```
+
+There are two important parts: meta info and main content.
+
+- Meta info - Short description and image cover of article. It's important for SEO and will be displayed as *post card* in `issues` list. 
+- Main content -Content with `MDX` syntax.
+
+Github issue support markdown syntax, it's good enough for most cases. But it would be great to support using React components in markdown, so we can display more complex content.
+
+***Markdown and React Components? Yeah, it's MDX***
+
+Before I convert raw github issue content to HTML, I treat it as MDX first. There is a great tool called `next-mdx-remote`, so I serialize content via `getStaticProps` during the `Next.js` build phase.
+
+```ts
+const mdxSource = await serialize(meta.content, {
+    mdxOptions: {
+      rehypePlugins: [/* rehypePlugins */],
+      remarkPlugins: [r/* remarkPlugins */],
     },
-    "./is-server": {
-      "node": {
-	      "import": "./dist/server/index.mjs",
-	      "require": "./dist/server/index.cjs",
-	      "types": "./dist/server/index.d.ts",
-      },
-     "browser": {
-	      "import": "./dist/browser/index.mjs",
-	      "require": "./dist/browser/index.cjs",
-	      "types": "./dist/browser/index.d.ts",
-      }
-    },
-    "./package.json": "./package.json",
-  }
-}
+ })
 ```
 
-Webpack will auto import different api with different compile target. In `target: node`, webpack will import `isServer` from `dist/server/index.mjs`, and it will always be `true`.
+I insist on keeping article content could be rendered as Github favor markdown. This the reason of *article meta info saved in markdown comments syntax, not break the structure of the post. And it's easy to be extracted via `gray-matter`.*
 
-`rollup-plugin-condition-exports@next` also has condition name convention. By default, files named `node or browser or deno` will setup in different conditions. In above `package.json` define, you can create project like this:
+***Add MDX syntax to markdown, will it break Github favor markdown render? The answer is YES!***
 
-```sh
-├── is-server
-│   ├── node.ts
-|   ├── browser.ts
-└── index.ts
+But there is a tip about JSX in markdown. In default, JSX will not be rendered in markdown, you can check https://github.com/mdx-js/mdx/discussions/2114 for more details. 
+
+```tsx
+<CustomComponent {...someprops} />
 ```
 
-I believe it makes api define much clearer, developers in the team will know which files are exported from package. You can visit https://github.com/JiangWeixian/rollup-plugin-condition-exports for documentation about plugin options and more usages.
+`CustomComponent` will be ignored. In otherwords, it destroys the content of the article and makes it unreadable. This is very bad for the management of articles. However, fortunately JSX in Github markdown will take it's children as fallback.
 
-In the end, Happy hacking 🧑‍💻 ～"
+```tsx
+<CustomComponent {...someprops}>
+  text
+</CustomComponent>
+```
+
+In this way, only `text` will be rendered. So, if we combine JSX(React Components) with original markdown syntax. Blog website will display rich content, and preview *non-broken* article content in github issue.
+
+## Organize with labels
+
+***Before posts are ready to publish to public, how to preview it?***
+
+I divided the articles into two categories by github label named `issue-dev` and `issue`.
+
+- In `Vercel` preview & dev environment, we get the issue content with `issue` and `issue-dev` labels. 
+- In `Vercel` production environment, we get the issue content with `issue` label only.
+
+## The end
+
+That's all about my personal blog, but not the end. I will continue update this post about blog site new features.
+
+Currently, it's still young, but I like it a lot, both the UI and the experience. I hope you will like it too.
+
+I'd also like to add more and more awesome features:
+
+- rss and newsletter. 
+- display video
+- membership based on github sponsor
+- And a simple comment system so I can receive feedbacks.
+
+*So on...*"

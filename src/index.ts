@@ -1,15 +1,10 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
-import { template } from 'lodash-es'
 import { createChatGPTAPI } from './api'
+import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
 
-const debug = Debug('neo:article-helper')
-
-const COMMENT_AUTHOR = new Set(['github-actions[bot]'])
-const prefix = '<!--article-helper-->'
-// refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
-const prompts = template('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is "<%= content %>"')
+const debug = Debug(DEBUG_KEY)
 
 export interface Comment {
   id: number
@@ -47,7 +42,11 @@ async function main() {
     })
     const article = prompts({ content: issue.data.body })
     const chatgptApi = createChatGPTAPI(apiKey)
-    const result = await chatgptApi.sendMessage(article, { stream: true })
+    const result = await chatgptApi.sendMessage(article, {
+      stream: true,
+      // response original format
+      promptPrefix: 'Respond markdown format.<|im_end|>\n',
+    })
     debug('issue body with prompts %s', article)
     // list all <number> comments to find specific comments
     const comments = await octokit.rest.issues.listComments({

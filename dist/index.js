@@ -5261,6 +5261,7 @@ var ChatGPTAPI = class {
           prompt,
           stream
         };
+        // return
         if (this._debug) {
           const numTokens = await this._getTokenCount(body.prompt);
           console.log(`sendMessage (${numTokens} tokens)`, body);
@@ -37658,12 +37659,34 @@ function wrappy (fn, cb) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createChatGPTAPI = void 0;
 var chatgpt_1 = __nccwpck_require__(9098);
+var constants_1 = __nccwpck_require__(1005);
 var createChatGPTAPI = function (apiKey) {
+    var _a;
     return new chatgpt_1.ChatGPTAPI({
         apiKey: apiKey,
+        debug: (_a = process.env.DEBUG) === null || _a === void 0 ? void 0 : _a.includes(constants_1.DEBUG_KEY),
+        // tricky part
+        maxResponseTokens: 100000000,
     });
 };
 exports.createChatGPTAPI = createChatGPTAPI;
+
+
+/***/ }),
+
+/***/ 1005:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prompts = exports.prefix = exports.COMMENT_AUTHOR = exports.DEBUG_KEY = void 0;
+var lodash_es_1 = __nccwpck_require__(5731);
+exports.DEBUG_KEY = 'neo:article-helper';
+exports.COMMENT_AUTHOR = new Set(['github-actions[bot]']);
+exports.prefix = '<!--article-helper-->';
+// refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
+exports.prompts = (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "<%= content %>"');
 
 
 /***/ }),
@@ -37889,18 +37912,14 @@ var tslib_1 = __nccwpck_require__(5394);
 var core = tslib_1.__importStar(__nccwpck_require__(7535));
 var github = tslib_1.__importStar(__nccwpck_require__(3666));
 var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
-var lodash_es_1 = __nccwpck_require__(5731);
 var api_1 = __nccwpck_require__(1724);
-var debug = (0, debug_1.default)('neo:article-helper');
-var COMMENT_AUTHOR = new Set(['github-actions[bot]']);
-var prefix = '<!--article-helper-->';
-// refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
-var prompts = (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is "<%= content %>"');
+var constants_1 = __nccwpck_require__(1005);
+var debug = (0, debug_1.default)(constants_1.DEBUG_KEY);
 var findComment = function (comments) {
-    return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(prefix)); });
+    return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && constants_1.COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(constants_1.prefix)); });
 };
 var withLeadPrefix = function (body) {
-    return "".concat(prefix, "\n").concat(body);
+    return "".concat(constants_1.prefix, "\n").concat(body);
 };
 function main() {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -37926,9 +37945,13 @@ function main() {
                         })];
                 case 1:
                     issue = _b.sent();
-                    article = prompts({ content: issue.data.body });
+                    article = (0, constants_1.prompts)({ content: issue.data.body });
                     chatgptApi = (0, api_1.createChatGPTAPI)(apiKey);
-                    return [4 /*yield*/, chatgptApi.sendMessage(article, { stream: true })];
+                    return [4 /*yield*/, chatgptApi.sendMessage(article, {
+                            stream: true,
+                            // response original format
+                            promptPrefix: 'Respond markdown format.<|im_end|>\n',
+                        })];
                 case 2:
                     result = _b.sent();
                     debug('issue body with prompts %s', article);
