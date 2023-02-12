@@ -37928,7 +37928,7 @@ function main() {
                     issue = _b.sent();
                     article = prompts({ content: issue.data.body });
                     chatgptApi = (0, api_1.createChatGPTAPI)(apiKey);
-                    return [4 /*yield*/, chatgptApi.sendMessage(article)];
+                    return [4 /*yield*/, chatgptApi.sendMessage(article, { stream: true })];
                 case 2:
                     result = _b.sent();
                     debug('issue body with prompts %s', article);

@@ -47,7 +47,7 @@ async function main() {
     })
     const article = prompts({ content: issue.data.body })
     const chatgptApi = createChatGPTAPI(apiKey)
-    const result = await chatgptApi.sendMessage(article)
+    const result = await chatgptApi.sendMessage(article, { stream: true })
     debug('issue body with prompts %s', article)
     // list all <number> comments to find specific comments
     const comments = await octokit.rest.issues.listComments({

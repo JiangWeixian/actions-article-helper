@@ -1,0 +1,139 @@
+I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is "<!--
+cover: https://realme-ten.vercel.app/api/v1/banner.svg?title=rollup-plugin-condition-exports&subtitle=%E2%9A%A1&desc=File+system+based+api+exports.&colorA=7c2d12&colorB=c2410c&textColor=fb923c
+description: Like front-end framework routes convention? Now you can write library like that ⚡️.
+-->
+
+## Introduction
+
+The feature of modern front-end framework which I like most is filesystem based routes. It make define routes easier. If you familar with `next.js`, you may define routes like that: 
+
+```sh
+./pages
+├── index.tsx
+└── issues
+    ├── id
+    │   └── [id].tsx
+    └── index.tsx
+
+```
+
+- `pages/index.tsx` equal `/`
+- `pages/issues/index.tsx` equal `/issues`
+- `pages/issues/id/[id].tsx` equal `/issues/id/:id`
+
+From `nodejs@12`, nodejs introduce a new feature called `condition-exports`, it make developers define package subexports much easier, e.g.
+
+```json
+"name": "pkg-name",
+"exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+   "./feature": {
+      "require": "./dist/feature.cjs",
+      "import": "./dist/feature.mjs",
+      "types": "./dist/feature.d.ts"
+    }
+ }
+```
+
+With `condition-exports`, users can use `feature` via `import feature from "pkg-name/feature"`. `feature` is exported api from `pkg-name`. If you used `lodash` before, `lodash` provides lots of apis, you may import one like this: 
+
+```ts
+import { isObject } from "lodash"
+```
+
+Webpack will bundle all lodash apis into finial bundled code, to reduce bundle size, developers always use it with `babel-plugin-import` to import used apis.  
+
+## New tool
+
+`Nodejs` condition exports has similar pattern systax like `router`, so why not use it in library project? Now you can use `rollup-plugin-condition-exports@next` to make library develop happier.
+
+By default, files agreed to be in folder `src/exports` will setup `exports` field in `package.json`, e.g.
+
+```sh
+├── button
+│   ├── button.ts
+└── index.ts
+```
+
+will convert into
+
+```json
+{
+  "name": "pkg-name",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
+    },
+    "./button": {
+      "import": "./dist/button/index.mjs",
+      "require": "./dist/button/index.cjs",
+      "types": "./dist/button/index.d.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "button": [
+        "dist/button/index.d.ts",
+      ],
+    },
+  },
+}
+```
+
+In addition to this, nodejs supports `condition-names`, you can define different apis in `node` side and `browser` side. It will be useful if you maintain a package export same api both in `node & browser` side, but with different behaviours in `node` and `browser` side
+
+For example, you probably export api called `isServer`, it return `false` in browser, and return `true` in node. A common solution is to use `typeof window` to detect context type during runtime. However it will make webpack treeshaking failed.
+
+With `Nodejs` condition exports, you can rewrite into that: 
+
+```json
+{
+  "name": "pkg-name",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
+    },
+    "./is-server": {
+      "node": {
+	      "import": "./dist/server/index.mjs",
+	      "require": "./dist/server/index.cjs",
+	      "types": "./dist/server/index.d.ts",
+      },
+     "browser": {
+	      "import": "./dist/browser/index.mjs",
+	      "require": "./dist/browser/index.cjs",
+	      "types": "./dist/browser/index.d.ts",
+      }
+    },
+    "./package.json": "./package.json",
+  }
+}
+```
+
+Webpack will auto import different api with different compile target. In `target: node`, webpack will import `isServer` from `dist/server/index.mjs`, and it will always be `true`.
+
+`rollup-plugin-condition-exports@next` also has condition name convention. By default, files named `node or browser or deno` will setup in different conditions. In above `package.json` define, you can create project like this:
+
+```sh
+├── is-server
+│   ├── node.ts
+|   ├── browser.ts
+└── index.ts
+```
+
+I believe it makes api define much clearer, developers in the team will know which files are exported from package. You can visit https://github.com/JiangWeixian/rollup-plugin-condition-exports for documentation about plugin options and more usages.
+
+In the end, Happy hacking 🧑‍💻 ～"
