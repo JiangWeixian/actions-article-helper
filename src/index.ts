@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
 import { template } from 'lodash-es'
+import { createChatGPTAPI } from './api'
 
 const debug = Debug('neo:article-helper')
 
@@ -31,8 +32,9 @@ async function main() {
   try {
     debug('start actions')
     const token = process.env.GITHUB_TOKEN
-    if (!token) {
-      throw new Error('Github token is required.')
+    const apiKey = process.env.OPENAI_API_KEY
+    if (!token || !apiKey) {
+      throw new Error('Github token and open api key <https://platform.openai.com/account/api-keys> is required.')
     }
     const octokit = github.getOctokit(token)
     const { owner, repo } = github.context.repo
@@ -44,6 +46,8 @@ async function main() {
       repo,
     })
     const article = prompts({ content: issue.data.body })
+    const chatgptApi = createChatGPTAPI(apiKey)
+    const result = await chatgptApi.sendMessage(article)
     debug('issue body with prompts %s', article)
     // list all <number> comments to find specific comments
     const comments = await octokit.rest.issues.listComments({
@@ -60,14 +64,14 @@ async function main() {
         owner,
         repo,
         comment_id: comment?.id,
-        body: withLeadPrefix(`Hello world ${Date.now()}`),
+        body: withLeadPrefix(`${result.text} ${Date.now()}`),
       })
     } else {
       await octokit.rest.issues.createComment({
         owner,
         repo,
         issue_number: number,
-        body: withLeadPrefix('hello world'),
+        body: withLeadPrefix(result.text),
       })
     }
 
