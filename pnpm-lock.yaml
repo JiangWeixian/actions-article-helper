@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  chatgpt@4.2.0:
+    hash: zh3hycyonl53pd2o2wfxlval44
+    path: patches/chatgpt@4.2.0.patch
+
 specifiers:
   '@actions/core': ^1.5.0
   '@actions/github': ^5.1.1
@@ -9,7 +14,7 @@ specifiers:
   '@types/lodash-es': ^4.17.6
   '@types/node': ^18.13.0
   '@vercel/ncc': ^0.31.0
-  chatgpt: ^4.2.0
+  chatgpt: 4.2.0
   cross-fetch: ^3.1.5
   cz-emoji: ^1.3.1
   debug: ^4.3.4
@@ -25,7 +30,7 @@ specifiers:
 dependencies:
   '@actions/core': 1.10.0
   '@actions/github': 5.1.1
-  chatgpt: 4.2.0
+  chatgpt: 4.2.0_zh3hycyonl53pd2o2wfxlval44
   cross-fetch: 3.1.5
   debug: 4.3.4
   lodash-es: 4.17.21
@@ -1274,7 +1279,7 @@ packages:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
 
-  /chatgpt/4.2.0:
+  /chatgpt/4.2.0_zh3hycyonl53pd2o2wfxlval44:
     resolution: {integrity: sha512-HYQ65GCa8PGtmmUB+XSAa17/IKTy/EEj8QU9HGU8UAsGBtKZushiozC0JpNcTyG+ivpuwzdduXJyL6ELnqkY4A==}
     engines: {node: '>=18'}
     dependencies:
@@ -1285,6 +1290,7 @@ packages:
       quick-lru: 6.1.1
       uuid: 9.0.0
     dev: false
+    patched: true
 
   /check-error/1.0.2:
     resolution: {integrity: sha512-BrgHpW9NURQgzoNyjfq0Wu6VFO6D7IZEmJNdtgNqpzGG8RuNFHt2jQxWlAs4HMe119chBnv+34syEZtc6IhLtA==}
