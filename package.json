@@ -41,7 +41,6 @@
   "devDependencies": {
     "@aiou/eslint-config": "^0.7.8",
     "@changesets/cli": "^2.17.0",
-    "@octokit/types": "^9.0.0",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.13.0",
     "@vercel/ncc": "^0.31.0",
