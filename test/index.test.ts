@@ -6,7 +6,7 @@ it('chatgpt', async () => {
   if (process.env.CI) {
     return
   }
-  const client = createChatGPTAPI(process.env.OPEN_API_KEY!)
+  const client = createChatGPTAPI(process.env.OPENAI_API_KEY!)
   const result = await client.sendMessage('ping')
   console.log(result)
 })
