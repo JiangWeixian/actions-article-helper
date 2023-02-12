@@ -1,13 +1,10 @@
-name: Wait
-description: Wait a designated number of milliseconds
+name: Issue article helper
+description: Check article grammar with chatgpt
 inputs:
   milliseconds: # id of input
     description: number of milliseconds to wait
-    required: true
+    required: false
     default: "1000"
-outputs:
-  time: # output will be available to future steps
-    description: The message to output
 runs:
-  using: node12
+  using: node16
   main: dist/index.js

@@ -24,12 +24,3 @@ jobs:
       run: pnpm install --frozen-lockfile=false
     - name: test
       run: pnpm test
-
-  # test action works running from the graph
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./
-      with:
-        milliseconds: 1000

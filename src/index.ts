@@ -74,8 +74,6 @@ async function main() {
         body: withLeadPrefix(result.text),
       })
     }
-
-    core.setOutput('time', new Date().toTimeString())
   } catch (error) {
     core.setFailed((error as any).message)
   }
