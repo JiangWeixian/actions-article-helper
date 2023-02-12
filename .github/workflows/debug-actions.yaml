@@ -20,3 +20,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEBUG: neo:article-helper
+        OPEN_API_KEY: ${{ secrets.OPEN_API_KEY }}
