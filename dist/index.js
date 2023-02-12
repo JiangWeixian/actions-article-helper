@@ -11372,8 +11372,8 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var tslib_1 = __nccwpck_require__(5394);
-var core_1 = tslib_1.__importDefault(__nccwpck_require__(7535));
-var github_1 = tslib_1.__importDefault(__nccwpck_require__(3666));
+var core = tslib_1.__importStar(__nccwpck_require__(7535));
+var github = tslib_1.__importStar(__nccwpck_require__(3666));
 var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
 var wait_1 = tslib_1.__importDefault(__nccwpck_require__(3865));
 var debug = (0, debug_1.default)('neo:article-helper');
@@ -11384,21 +11384,21 @@ function main() {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
-                    ms = core_1.default.getInput('milliseconds');
-                    core_1.default.info("Waiting ".concat(ms, " milliseconds ..."));
-                    core_1.default.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+                    ms = core.getInput('milliseconds');
+                    core.info("Waiting ".concat(ms, " milliseconds ..."));
+                    core.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
                     return [4 /*yield*/, (0, wait_1.default)(parseInt(ms))];
                 case 1:
                     _b.sent();
-                    core_1.default.info(new Date().toTimeString());
+                    core.info(new Date().toTimeString());
                     token = process.env.GITHUB_TOKEN;
                     if (!token) {
                         throw new Error('Github token is required.');
                     }
-                    octokit = github_1.default.getOctokit(token);
-                    _a = github_1.default.context.repo, owner = _a.owner, repo = _a.repo;
-                    number = github_1.default.context.issue.number;
-                    debug('issue context %o', github_1.default.context.issue);
+                    octokit = github.getOctokit(token);
+                    _a = github.context.repo, owner = _a.owner, repo = _a.repo;
+                    number = github.context.issue.number;
+                    debug('issue context %o', github.context.issue);
                     octokit.rest.issues.createComment({
                         owner: owner,
                         repo: repo,
@@ -11413,11 +11413,11 @@ function main() {
                 case 2:
                     comments = _b.sent();
                     console.log(comments);
-                    core_1.default.setOutput('time', new Date().toTimeString());
+                    core.setOutput('time', new Date().toTimeString());
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _b.sent();
-                    core_1.default.setFailed(error_1.message);
+                    core.setFailed(error_1.message);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
