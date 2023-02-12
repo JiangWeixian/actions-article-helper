@@ -11383,7 +11383,7 @@ function main() {
         return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 5, , 6]);
+                    _b.trys.push([0, 7, , 8]);
                     ms = core.getInput('milliseconds');
                     core.info("Waiting ".concat(ms, " milliseconds ..."));
                     core.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
@@ -11418,15 +11418,24 @@ function main() {
                         })];
                 case 3:
                     _b.sent();
-                    return [3 /*break*/, 4];
-                case 4:
-                    core.setOutput('time', new Date().toTimeString());
                     return [3 /*break*/, 6];
+                case 4: return [4 /*yield*/, octokit.rest.issues.createComment({
+                        owner: owner,
+                        repo: repo,
+                        issue_number: number,
+                        body: 'hello world',
+                    })];
                 case 5:
+                    _b.sent();
+                    _b.label = 6;
+                case 6:
+                    core.setOutput('time', new Date().toTimeString());
+                    return [3 /*break*/, 8];
+                case 7:
                     error_1 = _b.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
             }
         });
     });
