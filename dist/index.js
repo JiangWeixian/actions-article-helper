@@ -11377,6 +11377,14 @@ var github = tslib_1.__importStar(__nccwpck_require__(3666));
 var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
 var wait_1 = tslib_1.__importDefault(__nccwpck_require__(3865));
 var debug = (0, debug_1.default)('neo:article-helper');
+var COMMENT_AUTHOR = new Set(['github-actions[bot]']);
+var PREFIX = '<!--article-helper-->';
+var findComment = function (comments) {
+    return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(PREFIX)); });
+};
+var withLeadPrefix = function (body) {
+    return "".concat(PREFIX, "\n").concat(body);
+};
 function main() {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var ms, token, octokit, _a, owner, repo, number, comments, comment, error_1;
@@ -11407,14 +11415,14 @@ function main() {
                 case 2:
                     comments = _b.sent();
                     console.log(JSON.stringify(comments.data, null, 2));
-                    comment = comments.data.find(function (comment) { var _a, _b; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) === 'github_actions' && ((_b = comment.body) === null || _b === void 0 ? void 0 : _b.includes('<!--article-helper-->')); });
+                    comment = findComment(comments.data);
                     console.log(JSON.stringify(comment, null, 2));
                     if (!comment) return [3 /*break*/, 4];
                     return [4 /*yield*/, octokit.rest.issues.updateComment({
                             owner: owner,
                             repo: repo,
                             comment_id: comment === null || comment === void 0 ? void 0 : comment.id,
-                            body: "Hello world ".concat(Date.now()),
+                            body: withLeadPrefix("Hello world ".concat(Date.now())),
                         })];
                 case 3:
                     _b.sent();
@@ -11423,7 +11431,7 @@ function main() {
                         owner: owner,
                         repo: repo,
                         issue_number: number,
-                        body: 'hello world',
+                        body: withLeadPrefix('hello world'),
                     })];
                 case 5:
                     _b.sent();

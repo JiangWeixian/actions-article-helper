@@ -4,6 +4,25 @@ import Debug from 'debug'
 import wait from './wait'
 
 const debug = Debug('neo:article-helper')
+const COMMENT_AUTHOR = new Set(['github-actions[bot]'])
+const PREFIX = '<!--article-helper-->'
+
+export interface Comment {
+  id: number
+  body?: string
+  user: {
+    login: string
+  } | null
+  created_at: string
+}
+
+const findComment = (comments: Comment[]) => {
+  return comments.find(comment => comment.user?.login && COMMENT_AUTHOR.has(comment.user?.login) && comment.body?.includes(PREFIX))
+}
+
+const withLeadPrefix = (body: string) => {
+  return `${PREFIX}\n${body}`
+}
 
 async function main() {
   try {
@@ -30,21 +49,21 @@ async function main() {
     })
     console.log(JSON.stringify(comments.data, null, 2))
     // find comments by bot<github_actioins> start with `<!--article-helper-->`
-    const comment = comments.data.find(comment => comment.user?.login === 'github_actions' && comment.body?.includes('<!--article-helper-->'))
+    const comment = findComment(comments.data)
     console.log(JSON.stringify(comment, null, 2))
     if (comment) {
       await octokit.rest.issues.updateComment({
         owner,
         repo,
         comment_id: comment?.id,
-        body: `Hello world ${Date.now()}`,
+        body: withLeadPrefix(`Hello world ${Date.now()}`),
       })
     } else {
       await octokit.rest.issues.createComment({
         owner,
         repo,
         issue_number: number,
-        body: 'hello world',
+        body: withLeadPrefix('hello world'),
       })
     }
 
