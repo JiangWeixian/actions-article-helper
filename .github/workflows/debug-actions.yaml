@@ -17,6 +17,6 @@ jobs:
       with:
         node-version: 14
     - name: debug actions
-      uses: actions-article-helper@v1
+      uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
