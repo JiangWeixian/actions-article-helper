@@ -17,6 +17,6 @@ jobs:
       with:
         node-version: 14
     - name: debug actions
-      uses: actions-chatgpt-article-review@v1
+      uses: actions-article-helper@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
