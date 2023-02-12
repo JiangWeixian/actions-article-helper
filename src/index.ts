@@ -3,7 +3,7 @@ import github from '@actions/github'
 import Debug from 'debug'
 import wait from './wait'
 
-const debug = Debug('chatgpt:article-review')
+const debug = Debug('neo:article-helper')
 
 async function main() {
   try {
