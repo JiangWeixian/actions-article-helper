@@ -74,6 +74,7 @@ async function main() {
     const comment = findComment(comments.data)
     debug('find comment %o', comment)
     if (comment) {
+      debug('ChatGPT check result is %s', result.text)
       await octokit.rest.issues.updateComment({
         owner,
         repo,
@@ -81,6 +82,7 @@ async function main() {
         body: withLeadPrefix(`${result.text} ${Date.now()}`),
       })
     } else {
+      debug('ChatGPT check result is %s', result.text)
       await octokit.rest.issues.createComment({
         owner,
         repo,

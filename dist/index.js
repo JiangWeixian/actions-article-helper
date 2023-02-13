@@ -43120,6 +43120,7 @@ function main() {
                     comment = findComment(comments.data);
                     debug('find comment %o', comment);
                     if (!comment) return [3 /*break*/, 5];
+                    debug('ChatGPT check result is %s', result.text);
                     return [4 /*yield*/, octokit.rest.issues.updateComment({
                             owner: owner,
                             repo: repo,
@@ -43129,12 +43130,14 @@ function main() {
                 case 4:
                     _b.sent();
                     return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, octokit.rest.issues.createComment({
-                        owner: owner,
-                        repo: repo,
-                        issue_number: number,
-                        body: withLeadPrefix(result.text),
-                    })];
+                case 5:
+                    debug('ChatGPT check result is %s', result.text);
+                    return [4 /*yield*/, octokit.rest.issues.createComment({
+                            owner: owner,
+                            repo: repo,
+                            issue_number: number,
+                            body: withLeadPrefix(result.text),
+                        })];
                 case 6:
                     _b.sent();
                     _b.label = 7;
