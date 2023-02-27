@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
 import matter from 'gray-matter'
+import { omit } from 'lodash-es'
 
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
@@ -76,6 +77,7 @@ async function main() {
     // find comments by bot<github_actioins> start with `<!--article-helper-->`
     const comment = findComment(comments.data)
     debug('find comment %o', comment)
+    debug('chatgpt response %o', omit(result, 'text'))
     if (comment) {
       debug('ChatGPT check result is %s', result.text)
       await octokit.rest.issues.updateComment({

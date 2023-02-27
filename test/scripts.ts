@@ -1,24 +1,24 @@
-import { expect, it } from 'vitest'
 import { createChatGPTAPI } from '../src/api'
 import fs from 'fs/promises'
 import path from 'path'
+import './setup'
 
-it('chatgpt: native grammar checker', async () => {
-  // disable on github ci workflows
-  if (process.env.CI) {
-    return
-  }
-  const article = (await fs.readFile(path.resolve(__dirname, './context.txt'))).toString('utf-8')
-  const client = await createChatGPTAPI(process.env.OPENAI_API_KEY!, { article })
-  let result = await client.sendMessage(article, {
+const main = async () => {
+  const client = createChatGPTAPI(process.env.OPENAI_API_KEY!)
+  const prompt1 = (await fs.readFile(path.resolve(__dirname, './context.txt'))).toString('utf-8')
+  let result = await client.sendMessage(prompt1, {
     stream: true,
+    promptPrefix: 'Respond markdown format.<|im_end|>\n',
   })
   const prompt2 = (await fs.readFile(path.resolve(__dirname, './summarize-prompts.txt'))).toString('utf-8')
   console.log(result.parentMessageId, result.conversationId)
   result = await client.sendMessage(prompt2, {
     stream: true,
+    promptPrefix: '<|im_end|>\n',
     conversationId: result.conversationId,
     parentMessageId: result.id,
   })
   console.log(result.text)
-}, 1000000)
+}
+
+main()
