@@ -43071,12 +43071,13 @@ var parseArticle = function (body) {
     return tslib_1.__assign(tslib_1.__assign({}, meta), { data: meta.data });
 };
 function main() {
+    var _a;
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var token, apiKey, octokit, _a, owner, repo, number, issue, issueBody, article, chatgptApi, result, comments, comment, error_1;
-        return tslib_1.__generator(this, function (_b) {
-            switch (_b.label) {
+        var token, apiKey, octokit, ownerOnly, _b, owner, repo, _c, number, issueOwner, issue, issueBody, article, chatgptApi, result, comments, comment, error_1;
+        return tslib_1.__generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    _b.trys.push([0, 8, , 9]);
+                    _d.trys.push([0, 8, , 9]);
                     debug('start actions');
                     token = process.env.GITHUB_TOKEN;
                     apiKey = process.env.OPENAI_API_KEY;
@@ -43084,8 +43085,13 @@ function main() {
                         throw new Error('Github token and open api key <https://platform.openai.com/account/api-keys> is required.');
                     }
                     octokit = github.getOctokit(token);
-                    _a = github.context.repo, owner = _a.owner, repo = _a.repo;
-                    number = github.context.issue.number;
+                    ownerOnly = (_a = core.getInput('ownerOnly')) !== null && _a !== void 0 ? _a : true;
+                    debug('Option: ownerOnly %s', ownerOnly);
+                    _b = github.context.repo, owner = _b.owner, repo = _b.repo;
+                    _c = github.context.issue, number = _c.number, issueOwner = _c.owner;
+                    if (issueOwner !== owner && ownerOnly) {
+                        throw new Error('Only owner can trigger this action.');
+                    }
                     debug('issue context %O', github.context.issue);
                     return [4 /*yield*/, octokit.rest.issues.get({
                             issue_number: number,
@@ -43093,7 +43099,7 @@ function main() {
                             repo: repo,
                         })];
                 case 1:
-                    issue = _b.sent();
+                    issue = _d.sent();
                     if (!issue.data.body) {
                         core.info('issue body is empty, skip.');
                         return [2 /*return*/];
@@ -43107,7 +43113,7 @@ function main() {
                             promptPrefix: 'Respond markdown format.<|im_end|>\n',
                         })];
                 case 2:
-                    result = _b.sent();
+                    result = _d.sent();
                     debug('issue body with prompts %s', article);
                     return [4 /*yield*/, octokit.rest.issues.listComments({
                             owner: owner,
@@ -43115,7 +43121,7 @@ function main() {
                             issue_number: number,
                         })];
                 case 3:
-                    comments = _b.sent();
+                    comments = _d.sent();
                     debug('all comments %o from issue %s', comments.data, number);
                     comment = findComment(comments.data);
                     debug('find comment %o', comment);
@@ -43128,7 +43134,7 @@ function main() {
                             body: withLeadPrefix("".concat(result.text, " ").concat(Date.now())),
                         })];
                 case 4:
-                    _b.sent();
+                    _d.sent();
                     return [3 /*break*/, 7];
                 case 5:
                     debug('ChatGPT check result is %s', result.text);
@@ -43139,11 +43145,11 @@ function main() {
                             body: withLeadPrefix(result.text),
                         })];
                 case 6:
-                    _b.sent();
-                    _b.label = 7;
+                    _d.sent();
+                    _d.label = 7;
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_1 = _b.sent();
+                    error_1 = _d.sent();
                     core.setFailed(error_1.message);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];

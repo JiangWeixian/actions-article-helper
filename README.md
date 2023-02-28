@@ -39,6 +39,7 @@ jobs:
 |name|description|default|
 |:---:|:---:|:---|
 |`delimiters`|If issue body contain markdown metadata, it use [gray-matter](https://www.npmjs.com/package/gray-matter) to strip it. e.g. `"[\"<!--\", \"-->\"]"` ||
+|`ownerOnly`|Only owners allowed to trigger actions|true|
 
 
 ### permissions
