@@ -4,6 +4,10 @@ inputs:
   delimiters: # id of input
     description: gray matter delimiters
     required: false
+  ownerOnly:
+    description: only repo owner can trigger this action
+    required: false
+    default: true
 runs:
   using: "node16"
   main: "dist/index.js"

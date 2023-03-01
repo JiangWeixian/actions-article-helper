@@ -42,8 +42,13 @@ async function main() {
       throw new Error('Github token and open api key <https://platform.openai.com/account/api-keys> is required.')
     }
     const octokit = github.getOctokit(token)
+    const ownerOnly = core.getInput('ownerOnly') ?? true
+    debug('Option: ownerOnly %s', ownerOnly)
     const { owner, repo } = github.context.repo
-    const { number } = github.context.issue
+    const { number, owner: issueOwner } = github.context.issue
+    if (issueOwner !== owner && ownerOnly) {
+      throw new Error('Only owner can trigger this action.')
+    }
     debug('issue context %O', github.context.issue)
     const issue = await octokit.rest.issues.get({
       issue_number: number,
