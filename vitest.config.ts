@@ -4,5 +4,7 @@ export default defineConfig({
   test: {
     setupFiles: ['./test/setup.ts'],
     environment: 'node',
+    // equal: jest --runInBand run test one by one
+    threads: false,
   },
 })

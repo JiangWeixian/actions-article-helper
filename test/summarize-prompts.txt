@@ -1,0 +1,1 @@
+Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.

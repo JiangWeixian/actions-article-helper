@@ -81,59 +81,6 @@ jobs:
 
 I can `edit/create/delete` post anytime and anywhere.
 
-## Rich content
-
-A normal github issue could display like
-
-```
-<!--
-cover: image-url
-description: short description of content
--->
-
-// write main content here
-```
-
-There are two important parts: meta info and main content.
-
-- Meta info - Short description and image cover of article. It's important for SEO and will be displayed as *post card* in `issues` list. 
-- Main content -Content with `MDX` syntax.
-
-Github issue support markdown syntax, it's good enough for most cases. But it would be great to support using React components in markdown, so we can display more complex content.
-
-***Markdown and React Components? Yeah, it's MDX***
-
-Before I convert raw github issue content to HTML, I treat it as MDX first. There is a great tool called `next-mdx-remote`, so I serialize content via `getStaticProps` during the `Next.js` build phase.
-
-```ts
-const mdxSource = await serialize(meta.content, {
-    mdxOptions: {
-      rehypePlugins: [/* rehypePlugins */],
-      remarkPlugins: [r/* remarkPlugins */],
-    },
- })
-```
-
-I insist on keeping article content could be rendered as Github favor markdown. This the reason of *article meta info saved in markdown comments syntax, not break the structure of the post. And it's easy to be extracted via `gray-matter`.*
-
-***Add MDX syntax to markdown, will it break Github favor markdown render? The answer is YES!***
-
-But there is a tip about JSX in markdown. In default, JSX will not be rendered in markdown, you can check https://github.com/mdx-js/mdx/discussions/2114 for more details. 
-
-```tsx
-<CustomComponent {...someprops} />
-```
-
-`CustomComponent` will be ignored. In otherwords, it destroys the content of the article and makes it unreadable. This is very bad for the management of articles. However, fortunately JSX in Github markdown will take it's children as fallback.
-
-```tsx
-<CustomComponent {...someprops}>
-  text
-</CustomComponent>
-```
-
-In this way, only `text` will be rendered. So, if we combine JSX(React Components) with original markdown syntax. Blog website will display rich content, and preview *non-broken* article content in github issue.
-
 ## Organize with labels
 
 ***Before posts are ready to publish to public, how to preview it?***

@@ -1,10 +1,17 @@
 # actions-article-helper
 
-If you write article in github issue like me, you can use this action to *check issue article grammar*.
+If you write article in github issue like me, you can use this action to *check issue article grammar & generate article description*.
 
 ![screenshot](https://pbs.twimg.com/media/Foxfv3GagAAHChH?format=jpg&name=medium)
 
-This actions will comment check result under issue.
+Check https://github.com/JiangWeixian/actions-article-helper/issues/1 for more details.
+
+## features
+
+- 🔍 Check issue article grammar
+- 📝 Generate issue article description
+
+*This actions will comment result under issue.*
 
 ## usage
 

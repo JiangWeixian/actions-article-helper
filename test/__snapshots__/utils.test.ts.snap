@@ -1,0 +1,10 @@
+// Vitest Snapshot v1
+
+exports[`format 1`] = `
+"
+  # Summary      
+  content
+  # Article      
+  content
+  "
+`;

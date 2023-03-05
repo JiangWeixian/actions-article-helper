@@ -5,6 +5,7 @@ import matter from 'gray-matter'
 
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
+import { formatComment } from './utils'
 
 const debug = Debug(DEBUG_KEY)
 
@@ -19,10 +20,6 @@ export interface Comment {
 
 const findComment = (comments: Comment[]) => {
   return comments.find(comment => comment.user?.login && COMMENT_AUTHOR.has(comment.user?.login) && comment.body?.includes(prefix))
-}
-
-const withLeadPrefix = (body: string) => {
-  return `${prefix}\n${body}`
 }
 
 const parseArticle = (body: string) => {
@@ -60,12 +57,20 @@ async function main() {
       return
     }
     const issueBody = parseArticle(issue.data.body!)
-    const article = prompts({ content: issueBody.content })
-    const chatgptApi = await createChatGPTAPI(apiKey, { article })
-    const result = await chatgptApi.sendMessage(article, {
+    const articlePrompt = prompts.check({ content: issueBody.content })
+    const chatgptApi = await createChatGPTAPI(apiKey, { article: articlePrompt })
+    debug('start check grammar...')
+    const articleResult = await chatgptApi.sendMessage(articlePrompt, {
       stream: true,
     })
-    debug('issue body with prompts %s', article)
+    debug('chatgpt response for grammar checker %o', articleResult)
+    debug('start summarize article...')
+    const summaryPrompt = prompts.summarize()
+    const summaryResult = await chatgptApi.sendMessage(summaryPrompt, {
+      stream: true,
+      parentMessageId: articleResult.id,
+    })
+    debug('chatgpt response for summary %o', summaryResult)
     // list all <number> comments to find specific comments
     const comments = await octokit.rest.issues.listComments({
       owner,
@@ -77,20 +82,18 @@ async function main() {
     const comment = findComment(comments.data)
     debug('find comment %o', comment)
     if (comment) {
-      debug('ChatGPT check result is %s', result.text)
       await octokit.rest.issues.updateComment({
         owner,
         repo,
         comment_id: comment?.id,
-        body: withLeadPrefix(`${result.text} ${Date.now()}`),
+        body: formatComment({ article: articleResult.text, summary: summaryResult.text }),
       })
     } else {
-      debug('ChatGPT check result is %s', result.text)
       await octokit.rest.issues.createComment({
         owner,
         repo,
         issue_number: number,
-        body: withLeadPrefix(result.text),
+        body: formatComment({ article: articleResult.text, summary: summaryResult.text }),
       })
     }
   } catch (error) {

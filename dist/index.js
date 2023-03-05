@@ -7117,6 +7117,336 @@ function hasOwn(obj, key) {
 
 /***/ }),
 
+/***/ 8593:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.badge = void 0;
+var block_1 = __nccwpck_require__(5240);
+var badge = function (_a) {
+    var _b = _a.value, value = _b === void 0 ? 0 : _b;
+    if (value === 0) {
+        return '';
+    }
+    return block_1.inlineBlock(['`', "+" + value, '`']);
+};
+exports.badge = badge;
+
+
+/***/ }),
+
+/***/ 5240:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.inlineBlock = exports.block = void 0;
+function block() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (args.length === 1 && Array.isArray(args[0])) {
+        return args[0].join('\n');
+    }
+    return args.join('\n');
+}
+exports.block = block;
+function inlineBlock() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (args.length === 1 && Array.isArray(args[0])) {
+        return args[0].join('');
+    }
+    return args.join('');
+}
+exports.inlineBlock = inlineBlock;
+
+
+/***/ }),
+
+/***/ 9607:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.inlineCode = exports.code = void 0;
+var block_1 = __nccwpck_require__(5240);
+var code = function (props) {
+    return block_1.block(['```' + (props.language || ''), props.value || '', '```']);
+};
+exports.code = code;
+var inlineCode = function (props) {
+    return block_1.inlineBlock(['`', props.value || '', '`']);
+};
+exports.inlineCode = inlineCode;
+
+
+/***/ }),
+
+/***/ 2496:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.default = {
+    newline: ' '.repeat(6),
+    divider: '#\n',
+};
+
+
+/***/ }),
+
+/***/ 7195:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.image = void 0;
+var image = function (props) {
+    return "![" + (props.alt || '') + "](" + (props.src || '') + ")";
+};
+exports.image = image;
+
+
+/***/ }),
+
+/***/ 1595:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.title = exports.menu = exports.inlineCode = exports.code = exports.image = exports.link = exports.list = exports.inlineBlock = exports.block = exports.badge = exports.overflowList = exports.table = void 0;
+var table_1 = __nccwpck_require__(9180);
+Object.defineProperty(exports, "table", ({ enumerable: true, get: function () { return table_1.table; } }));
+var overflow_list_1 = __nccwpck_require__(9488);
+Object.defineProperty(exports, "overflowList", ({ enumerable: true, get: function () { return overflow_list_1.overflowList; } }));
+var badge_1 = __nccwpck_require__(8593);
+Object.defineProperty(exports, "badge", ({ enumerable: true, get: function () { return badge_1.badge; } }));
+var block_1 = __nccwpck_require__(5240);
+Object.defineProperty(exports, "block", ({ enumerable: true, get: function () { return block_1.block; } }));
+Object.defineProperty(exports, "inlineBlock", ({ enumerable: true, get: function () { return block_1.inlineBlock; } }));
+var list_1 = __nccwpck_require__(8128);
+Object.defineProperty(exports, "list", ({ enumerable: true, get: function () { return list_1.list; } }));
+var link_1 = __nccwpck_require__(623);
+Object.defineProperty(exports, "link", ({ enumerable: true, get: function () { return link_1.link; } }));
+var image_1 = __nccwpck_require__(7195);
+Object.defineProperty(exports, "image", ({ enumerable: true, get: function () { return image_1.image; } }));
+var code_1 = __nccwpck_require__(9607);
+Object.defineProperty(exports, "code", ({ enumerable: true, get: function () { return code_1.code; } }));
+Object.defineProperty(exports, "inlineCode", ({ enumerable: true, get: function () { return code_1.inlineCode; } }));
+var menu_1 = __nccwpck_require__(8555);
+Object.defineProperty(exports, "menu", ({ enumerable: true, get: function () { return menu_1.menu; } }));
+var title_1 = __nccwpck_require__(6739);
+Object.defineProperty(exports, "title", ({ enumerable: true, get: function () { return title_1.title; } }));
+
+
+/***/ }),
+
+/***/ 623:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.link = void 0;
+var link = function (props) {
+    return "[" + (props.alt || props.children || '') + "](" + (props.href || '') + ")";
+};
+exports.link = link;
+
+
+/***/ }),
+
+/***/ 8128:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.list = exports.listItem = void 0;
+var tslib_1 = __nccwpck_require__(5394);
+var block_1 = __nccwpck_require__(5240);
+var listItem = function (value) {
+    return ['- ', value].join('');
+};
+exports.listItem = listItem;
+var list = function (_a) {
+    var _b = _a.dataSource, dataSource = _b === void 0 ? [] : _b, _c = _a.limit, limit = _c === void 0 ? Infinity : _c, props = tslib_1.__rest(_a, ["dataSource", "limit"]);
+    var lists = dataSource.slice(0, limit).map(function (v) {
+        var content = v;
+        if (props.renderItem) {
+            content = props.renderItem(v);
+        }
+        return exports.listItem(content);
+    });
+    var tail = '';
+    if (limit < dataSource.length) {
+        tail = exports.listItem('...');
+    }
+    return block_1.block(lists.concat(tail));
+};
+exports.list = list;
+
+
+/***/ }),
+
+/***/ 8555:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.menu = void 0;
+var block_1 = __nccwpck_require__(5240);
+var list_1 = __nccwpck_require__(8128);
+var prefixable = function (level) {
+    if (level === void 0) { level = 0; }
+    if (level === 0) {
+        return '';
+    }
+    return ' '.repeat(level + 1);
+};
+var isStringMenu = function (items) {
+    if (items === void 0) { items = []; }
+    return typeof items[0] === 'string';
+};
+var isObjectMenu = function (items) {
+    if (items === void 0) { items = []; }
+    return typeof items[0] === 'object';
+};
+var getSubMenu = function (dataSource, level) {
+    if (dataSource === void 0) { dataSource = []; }
+    if (level === void 0) { level = 0; }
+    if (dataSource.length === 0) {
+        return '';
+    }
+    if (isStringMenu(dataSource)) {
+        var data = dataSource.map(function (v) {
+            return block_1.inlineBlock(prefixable(level), list_1.listItem(v));
+        });
+        return block_1.block(data);
+    }
+    if (isObjectMenu(dataSource)) {
+        var data = dataSource.map(function (v) {
+            var parent = block_1.inlineBlock(prefixable(level), list_1.listItem(v.title));
+            var children = getSubMenu(v.items, level + 1);
+            if (children === '') {
+                return parent;
+            }
+            return block_1.block(parent, children);
+        });
+        return block_1.block(data);
+    }
+    return '';
+};
+var menu = function (_a) {
+    var _b = _a.dataSource, dataSource = _b === void 0 ? [] : _b;
+    return getSubMenu(dataSource, 0);
+};
+exports.menu = menu;
+
+
+/***/ }),
+
+/***/ 9488:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.overflowList = void 0;
+var badge_1 = __nccwpck_require__(8593);
+var overflowList = function (_a) {
+    var _b = _a.limit, limit = _b === void 0 ? Infinity : _b, _c = _a.dataSource, dataSource = _c === void 0 ? [] : _c;
+    var sliced = dataSource || [];
+    var len = dataSource.length;
+    if (limit && len > limit) {
+        sliced = dataSource === null || dataSource === void 0 ? void 0 : dataSource.slice(0, limit);
+    }
+    var badgeCount = Math.max(len - limit, 0);
+    var content = sliced.join(', ');
+    if (badgeCount > 0) {
+        return [content, ' ', badge_1.badge({ value: badgeCount })].join('');
+    }
+    return content;
+};
+exports.overflowList = overflowList;
+
+
+/***/ }),
+
+/***/ 9180:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.table = void 0;
+/**
+ * @description render markdown table
+ */
+var table = function (props) {
+    var len = props.columns.length;
+    var tableHeader = new Array(len)
+        .fill(0)
+        .map(function (_v, i) {
+        return "|" + props.columns[i].title;
+    })
+        .concat('|')
+        .join('');
+    var fixedRow = new Array(len)
+        .fill(0)
+        .map(function () {
+        return "|" + new Array(5).fill('-').join('');
+    })
+        .concat('|')
+        .join('');
+    var rows = props.dataSource
+        .map(function (v) {
+        var row = props.columns
+            .map(function (col) { var _a; return "|" + (((_a = col.render) === null || _a === void 0 ? void 0 : _a.call(col, col.dataIndex ? v[col.dataIndex] : v)) || v[col.dataIndex]); })
+            .concat('|')
+            .join('');
+        return row;
+    })
+        .join('\n');
+    return [tableHeader, fixedRow, rows].join('\n');
+};
+exports.table = table;
+
+
+/***/ }),
+
+/***/ 6739:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.title = void 0;
+var tslib_1 = __nccwpck_require__(5394);
+var block_1 = __nccwpck_require__(5240);
+var constants_1 = tslib_1.__importDefault(__nccwpck_require__(2496));
+var title = function (_a) {
+    var _b = _a.heading, heading = _b === void 0 ? 1 : _b, props = tslib_1.__rest(_a, ["heading"]);
+    var hash = '#'.repeat(heading);
+    return block_1.inlineBlock([hash, ' ', props.children || '', constants_1.default.newline]);
+};
+exports.title = title;
+
+
+/***/ }),
+
 /***/ 3880:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -43373,22 +43703,25 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createChatGPTAPI = void 0;
 var tslib_1 = __nccwpck_require__(5394);
 var chatgpt_1 = __nccwpck_require__(5234);
+var keyv_1 = tslib_1.__importDefault(__nccwpck_require__(2851));
 var constants_1 = __nccwpck_require__(1005);
 var cross_fetch_1 = __nccwpck_require__(4691);
 var utils_1 = __nccwpck_require__(1725);
 var createChatGPTAPI = function (apiKey, options) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var tokens;
+    var tokens, messageStore;
     var _a;
     return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, (0, utils_1.getTokenCount)(options.article)];
             case 1:
                 tokens = _b.sent();
+                messageStore = new keyv_1.default();
                 return [2 /*return*/, new chatgpt_1.ChatGPTAPI({
                         fetch: cross_fetch_1.fetch,
                         apiKey: apiKey,
                         debug: (_a = process.env.DEBUG) === null || _a === void 0 ? void 0 : _a.includes(constants_1.DEBUG_KEY),
                         maxResponseTokens: (tokens !== null && tokens !== void 0 ? tokens : 1024) + 100,
+                        messageStore: messageStore,
                     })];
         }
     });
@@ -43410,7 +43743,10 @@ exports.DEBUG_KEY = 'neo:article-helper';
 exports.COMMENT_AUTHOR = new Set(['github-actions[bot]']);
 exports.prefix = '<!--article-helper-->';
 // refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
-exports.prompts = (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "<%= content %>"');
+exports.prompts = {
+    check: (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "<%= content %>"'),
+    summarize: (0, lodash_es_1.template)('Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.'),
+};
 
 
 /***/ }),
@@ -43421,9 +43757,11 @@ exports.prompts = (0, lodash_es_1.template)('I want you to act as an English tra
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getTokenCount = void 0;
+exports.formatComment = exports.getTokenCount = void 0;
 var tslib_1 = __nccwpck_require__(5394);
 var tiktoken_1 = __nccwpck_require__(2195);
+var functional_md_1 = __nccwpck_require__(1595);
+var constants_1 = __nccwpck_require__(1005);
 var tokenizer = (0, tiktoken_1.get_encoding)('cl100k_base');
 function encode(input) {
     return tokenizer.encode(input);
@@ -43436,6 +43774,15 @@ var getTokenCount = function (text) { return tslib_1.__awaiter(void 0, void 0, v
     });
 }); };
 exports.getTokenCount = getTokenCount;
+var withLeadPrefix = function (body) {
+    return "".concat(constants_1.prefix, "\n").concat(new Date(), "\n").concat(body);
+};
+var formatComment = function (_a) {
+    var article = _a.article, summary = _a.summary;
+    var comment = "\n  ".concat((0, functional_md_1.title)({ heading: 1, children: 'Summary' }), "\n  ").concat(summary, "\n  ").concat((0, functional_md_1.title)({ heading: 1, children: 'Article' }), "\n  ").concat(article, "\n  ");
+    return withLeadPrefix(comment);
+};
+exports.formatComment = formatComment;
 
 
 /***/ }),
@@ -43664,12 +44011,10 @@ var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
 var gray_matter_1 = tslib_1.__importDefault(__nccwpck_require__(3880));
 var api_1 = __nccwpck_require__(1724);
 var constants_1 = __nccwpck_require__(1005);
+var utils_1 = __nccwpck_require__(1725);
 var debug = (0, debug_1.default)(constants_1.DEBUG_KEY);
 var findComment = function (comments) {
     return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && constants_1.COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(constants_1.prefix)); });
-};
-var withLeadPrefix = function (body) {
-    return "".concat(constants_1.prefix, "\n").concat(body);
 };
 var parseArticle = function (body) {
     var meta = (0, gray_matter_1.default)(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined });
@@ -43678,11 +44023,11 @@ var parseArticle = function (body) {
 function main() {
     var _a;
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var token, apiKey, octokit, ownerOnly, _b, owner, repo, _c, number, issueOwner, issue, issueBody, article, chatgptApi, result, comments, comment, error_1;
+        var token, apiKey, octokit, ownerOnly, _b, owner, repo, _c, number, issueOwner, issue, issueBody, articlePrompt, chatgptApi, articleResult, summaryPrompt, summaryResult, comments, comment, error_1;
         return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _d.trys.push([0, 9, , 10]);
+                    _d.trys.push([0, 10, , 11]);
                     debug('start actions');
                     token = process.env.GITHUB_TOKEN;
                     apiKey = process.env.OPENAI_API_KEY;
@@ -43710,54 +44055,61 @@ function main() {
                         return [2 /*return*/];
                     }
                     issueBody = parseArticle(issue.data.body);
-                    article = (0, constants_1.prompts)({ content: issueBody.content });
-                    return [4 /*yield*/, (0, api_1.createChatGPTAPI)(apiKey, { article: article })];
+                    articlePrompt = constants_1.prompts.check({ content: issueBody.content });
+                    return [4 /*yield*/, (0, api_1.createChatGPTAPI)(apiKey, { article: articlePrompt })];
                 case 2:
                     chatgptApi = _d.sent();
-                    return [4 /*yield*/, chatgptApi.sendMessage(article, {
+                    debug('start check grammar...');
+                    return [4 /*yield*/, chatgptApi.sendMessage(articlePrompt, {
                             stream: true,
                         })];
                 case 3:
-                    result = _d.sent();
-                    debug('issue body with prompts %s', article);
+                    articleResult = _d.sent();
+                    debug('chatgpt response for grammar checker %o', articleResult);
+                    debug('start summarize article...');
+                    summaryPrompt = constants_1.prompts.summarize();
+                    return [4 /*yield*/, chatgptApi.sendMessage(summaryPrompt, {
+                            stream: true,
+                            parentMessageId: articleResult.id,
+                        })];
+                case 4:
+                    summaryResult = _d.sent();
+                    debug('chatgpt response for summary %o', summaryResult);
                     return [4 /*yield*/, octokit.rest.issues.listComments({
                             owner: owner,
                             repo: repo,
                             issue_number: number,
                         })];
-                case 4:
+                case 5:
                     comments = _d.sent();
                     debug('all comments %o from issue %s', comments.data, number);
                     comment = findComment(comments.data);
                     debug('find comment %o', comment);
-                    if (!comment) return [3 /*break*/, 6];
-                    debug('ChatGPT check result is %s', result.text);
+                    if (!comment) return [3 /*break*/, 7];
                     return [4 /*yield*/, octokit.rest.issues.updateComment({
                             owner: owner,
                             repo: repo,
                             comment_id: comment === null || comment === void 0 ? void 0 : comment.id,
-                            body: withLeadPrefix("".concat(result.text, " ").concat(Date.now())),
+                            body: (0, utils_1.formatComment)({ article: articleResult.text, summary: summaryResult.text }),
                         })];
-                case 5:
-                    _d.sent();
-                    return [3 /*break*/, 8];
                 case 6:
-                    debug('ChatGPT check result is %s', result.text);
-                    return [4 /*yield*/, octokit.rest.issues.createComment({
-                            owner: owner,
-                            repo: repo,
-                            issue_number: number,
-                            body: withLeadPrefix(result.text),
-                        })];
-                case 7:
                     _d.sent();
-                    _d.label = 8;
-                case 8: return [3 /*break*/, 10];
-                case 9:
+                    return [3 /*break*/, 9];
+                case 7: return [4 /*yield*/, octokit.rest.issues.createComment({
+                        owner: owner,
+                        repo: repo,
+                        issue_number: number,
+                        body: (0, utils_1.formatComment)({ article: articleResult.text, summary: summaryResult.text }),
+                    })];
+                case 8:
+                    _d.sent();
+                    _d.label = 9;
+                case 9: return [3 /*break*/, 11];
+                case 10:
                     error_1 = _d.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/];
             }
         });
     });
