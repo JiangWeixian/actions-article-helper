@@ -40,6 +40,7 @@
     "chatgpt": "5.0.6",
     "cross-fetch": "^3.1.5",
     "debug": "^4.3.4",
+    "functional-md": "^1.1.0",
     "gray-matter": "^4.0.3",
     "keyv": "^4.5.2",
     "lodash-es": "^4.17.21"

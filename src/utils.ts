@@ -1,4 +1,7 @@
 import { get_encoding } from '@dqbd/tiktoken'
+import { title } from 'functional-md'
+import { prefix } from './constants'
+
 const tokenizer = get_encoding('cl100k_base')
 
 function encode(input: string) {
@@ -9,4 +12,18 @@ function encode(input: string) {
 export const getTokenCount = async (text: string) => {
   text = text.replace(/<\|endoftext\|>/g, '')
   return encode(text).length
+}
+
+const withLeadPrefix = (body: string) => {
+  return `${prefix}\n${new Date()}\n${body}`
+}
+
+export const formatComment = ({ article, summary }: { article: string; summary: string }) => {
+  const comment = `
+  ${title({ heading: 1, children: 'Summary' })}
+  ${summary}
+  ${title({ heading: 1, children: 'Article' })}
+  ${article}
+  `
+  return withLeadPrefix(comment)
 }

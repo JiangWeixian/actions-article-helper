@@ -18,6 +18,7 @@ specifiers:
   dotenv: ^10.0.0
   eslint: ^8.34.0
   esno: ^0.16.3
+  functional-md: ^1.1.0
   gray-matter: ^4.0.3
   husky: ^7.0.0
   keyv: ^4.5.2
@@ -36,6 +37,7 @@ dependencies:
   chatgpt: 5.0.6
   cross-fetch: 3.1.5
   debug: 4.3.4
+  functional-md: 1.1.0
   gray-matter: 4.0.3
   keyv: 4.5.2
   lodash-es: 4.17.21
@@ -394,6 +396,27 @@ packages:
   /@dqbd/tiktoken/0.4.0:
     resolution: {integrity: sha512-iaHgmwKAOqowBFZKxelyszoeGLoNw62eOULcmyme1aA1Ymr3JgYl0V7jwpuUm7fksalycZajx3loFn9TRUaviw==}
     dev: false
+
+  /@esbuild-kit/cjs-loader/2.4.2:
+    resolution: {integrity: sha512-BDXFbYOJzT/NBEtp71cvsrGPwGAMGRB/349rwKuoxNSiKjPraNNnlK6MIIabViCjqZugu6j+xeMDlEkWdHHJSg==}
+    dependencies:
+      '@esbuild-kit/core-utils': 3.1.0
+      get-tsconfig: 4.4.0
+    dev: true
+
+  /@esbuild-kit/core-utils/3.1.0:
+    resolution: {integrity: sha512-Uuk8RpCg/7fdHSceR1M6XbSZFSuMrxcePFuGgyvsBn+u339dk5OeL4jv2EojwTN2st/unJGsVm4qHWjWNmJ/tw==}
+    dependencies:
+      esbuild: 0.17.8
+      source-map-support: 0.5.21
+    dev: true
+
+  /@esbuild-kit/esm-loader/2.5.5:
+    resolution: {integrity: sha512-Qwfvj/qoPbClxCRNuac1Du01r9gvNOT+pMYtJDapfB1eoGN1YlJ1BixLyL9WVENRx5RXgNLdfYdx/CuswlGhMw==}
+    dependencies:
+      '@esbuild-kit/core-utils': 3.1.0
+      get-tsconfig: 4.4.0
+    dev: true
 
   /@esbuild/android-arm/0.16.17:
     resolution: {integrity: sha512-N9x1CMXVhtWEAMS7pNNONyA14f71VPQN9Cnavj1XQh6T7bskqiLLrSca4O0Vr8Wdcga943eThxnVp3JLnBMYtw==}
@@ -2628,6 +2651,10 @@ packages:
       es-abstract: 1.21.1
       functions-have-names: 1.2.3
     dev: true
+
+  /functional-md/1.1.0:
+    resolution: {integrity: sha512-efLUEFgZYiLvfd1+aRBHcf4Dx4T9lV3DXPtv6mXXXME1dmGAxp4WjFjYXG5YbjiO4vFaLTucOnvnPCbr1ktGgA==}
+    dev: false
 
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}

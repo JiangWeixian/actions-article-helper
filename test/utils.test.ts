@@ -1,11 +1,16 @@
 import fs from 'fs/promises'
 import path from 'path'
-import { it } from 'vitest'
+import { expect, it } from 'vitest'
 
-import { getTokenCount } from '../src/utils'
+import { formatComment, getTokenCount } from '../src/utils'
 
-it('tokens', async () => {
+it('tokens count', async () => {
   const content = (await fs.readFile(path.resolve(__dirname, './prompts.txt'))).toString('utf-8')
   const count = await getTokenCount(content)
   console.log(count)
+})
+
+it('format', async () => {
+  const comment = formatComment({ article: 'content', summary: 'content' })
+  expect(comment.split('\n').slice(2).join('\n')).toMatchSnapshot()
 })

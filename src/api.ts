@@ -14,13 +14,6 @@ export const createChatGPTAPI = async (apiKey: string, options: { article: strin
     apiKey,
     debug: process.env.DEBUG?.includes(DEBUG_KEY),
     maxResponseTokens: (tokens ?? 1024) + 100,
-    getMessageById: async (id) => {
-      console.log('get messageStore', id, messageStore.get(id))
-      return messageStore.get(id)
-    },
-    upsertMessage: async (message) => {
-      console.log('save messageStore', message.id, message)
-      await messageStore.set(message.id, message)
-    },
+    messageStore,
   })
 }
