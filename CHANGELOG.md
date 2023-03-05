@@ -1,5 +1,11 @@
 # actions-article-helper
 
+## 1.2.0
+
+### Minor Changes
+
+- 736eb58: summary artcile
+
 ## 1.1.0
 
 ### Minor Changes
