@@ -1,0 +1,159 @@
+## Why Begin Developing My Blog in 2022
+
+For a long time, I felt ashamed to express myself publicly, either in terms of ideas or what I was doing. However, I have always dreamed of becoming a full-time open-source developer or freelancer. Although it's undoubtedly challenging, building in public is the first step.
+
+Building in public not only helps you validate your ideas, but it can also expand your lucky area (https://github.com/readme/guides/publishing-your-work).
+
+Here, I will share my ideas and attempts, and of course, what I've created.
+
+The first thing I want to share is "How I Built My Blog Site in 2022."
+
+## How It Works
+
+### Requirements
+
+The reason I did not choose any popular blog-building tools but started from scratch was that I wanted to take control of my site.
+
+When I was new to front-end development, I chose Vuepress to build my site. Every time I created or edited a post, I had to pull, commit, and push on my computer repeatedly. Even though Vuepress is an excellent tool, I could not concentrate on writing this way.
+
+Therefore for this blog site, I have some hard requirements: I should focus on the writing itself, and I want to be able to edit my content anytime and anywhere.
+
+### Stacks
+
+I chose the following tech stack to build my site:
+
+- `Next.js`: I am more familiar with it than other frameworks. Another main reason is `ISR`, which I will talk about later.
+- `Tailwind`: It's awesome.
+- `Stitches`: I used to use `styled-components` as my `CSS-in-JS` solution. When I discovered `Stitches`, I fell in love with its type-safe API design. Currently, I use `Stitches` with `Tailwind` as my style solution.
+- `Mayumi`: A MacOS style UI library created by me.
+- `GitHub Issues`: I like using `GitHub Issues` as my datasets because it's a dataset with a visual interface. Not only that, when you link another issue in an issue content, you can find that it looks like a duplicate link.
+
+### Next.js ISR
+
+Returning to `Next.js`, perhaps it's the hardest part of my blog site. I chose [`ISR`](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration) instead of `SSR`. `ISR` is something like the advanced version of `SSG`. For a blog site, many blog posts are much more static, so it's well suited to ISR.
+
+If you spend some time on this website, you'll find two main parts: 
+
+- `/issues`: Lists all available posts (already published to the public).
+- `/issues/[id]`: Displays post content.
+
+The great thing about `ISR` is that when I create a new post, it will re-update `/issues` and `/issues/[id]` at the backend. If I only edit issue content, I can choose to re-update the `/issues/[id]` page via API `unstable_revalidate()`.
+
+```ts
+// /pages/api/revalidate
+// ...
+console.log('[Next.js] Revalidating /issues')
+await res.unstable_revalidate('/issues')
+if (issueNumber) {
+  console.log(`[Next.js] Revalidating /issues/id/${issueNumber}`)
+  await res.unstable_revalidate(`/issues/id/${issueNumber}`)
+}
+// ...
+```
+
+I created an API route `/pages/api/revalidate` to update `/issues` or `/issues/[id]` manually. This eliminates the need for manual deployments repeatedly.
+
+***But how do I know when to call `/revalidate`?***
+
+Remember, all my blog posts are saved in GitHub issues. When I edit an issue, GitHub will trigger an event signal to invoke valid workflows. I can call `unstable_revalidate` in the following GitHub workflow:
+
+```yaml
+name: Revalidate
+on:
+  issues:
+    types: ["opened", "edited", "labeled", "deleted", "closed", "reopened"]
+  push:
+    branches: ["main", "master"]
+  label:
+jobs:
+  Revalidate:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: revalidate
+         uses: actions/github-script@v6
+         env:
+           AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+         with:
+           script: |
+             // revalidate `/issues` page
+```
+
+I can edit, create, or delete a post anytime and anywhere.
+
+## Rich Content
+
+A typical GitHub issue may resemble the following:
+
+```
+<!--
+cover: image-url
+description: short description of content
+-->
+
+// write main content here
+```
+
+There are two important parts: meta-info and main content.
+
+- Meta info: Short description and image cover of the article. It's essential for SEO and will be displayed as a post card in `issues` list.
+- Main content: Content with `MDX` syntax.
+
+GitHub issues support markdown syntax, which is good enough for most cases. But it would be great to support using React components in markdown, so we can display more complex content.
+
+***Markdown and React Components? Yes, it's MDX.***
+
+Before I convert raw GitHub issue content to HTML, I treat it as MDX first. There is a great tool called `next-mdx-remote`, so I serialize content via `getStaticProps` during the `Next.js` build phase.
+
+```ts
+const mdxSource = await serialize(meta.content, {
+    mdxOptions: {
+      rehypePlugins: [/* rehypePlugins */],
+      remarkPlugins: [r/* remarkPlugins */],
+    },
+ })
+```
+
+I insist on keeping article content that can be rendered as GitHub-flavored markdown. That's the reason why *article meta info is saved in markdown comment syntax, not breaking the structure of the post. And it's easy to extract via `gray-matter`.*
+
+***Adding MDX syntax to markdown, will it break GitHub-flavored markdown render? The answer is YES!***
+
+But there is a tip about JSX in markdown. By default, JSX will not be rendered in markdown. You can check https://github.com/mdx-js/mdx/discussions/2114 for more details.
+
+```tsx
+<CustomComponent {...someprops} />
+```
+
+`CustomComponent` will be ignored. In other words, it destroys the content of the article and makes it unreadable. This is very bad for the management of articles. However, fortunately, JSX in GitHub markdown will take its children as fallback.
+
+```tsx
+<CustomComponent {...someprops}>
+  text
+</CustomComponent>
+```
+
+In this way, only `text` will be rendered. So, if we combine JSX (React Components) with original markdown syntax, the blog website will display rich content and preview non-broken article content in GitHub issues.
+
+## Organize with Labels
+
+***Before posts are ready to publish to the public, how can they be previewed?***
+
+I divided the articles into two categories by a GitHub label named `issue-dev` and `issue`.
+
+- In the `Vercel` preview and dev environment, we get the issue content with `issue` and `issue-dev` labels.
+- In the `Vercel` production environment, we get the issue content with the `issue` label only.
+
+## The End
+
+That's all about my personal blog, but it's not the end. I will continue updating this post about new features on the blog site.
+
+Currently, it's still young, but I like it a lot, both the UI and the experience. I hope you will like it too.
+
+I'd also like to add more and more awesome features:
+
+- RSS and newsletter.
+- Display video.
+- Membership based on GitHub sponsor.
+- And a simple comment system so I can receive feedback.
+
+*And so on...*

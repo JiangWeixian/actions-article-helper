@@ -1978,6 +1978,457 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
+/***/ 2195:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+let imports = {};
+imports['__wbindgen_placeholder__'] = module.exports;
+let wasm;
+const { TextEncoder, TextDecoder } = __nccwpck_require__(1669);
+
+const heap = new Array(128).fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+function getObject(idx) { return heap[idx]; }
+
+let heap_next = heap.length;
+
+function dropObject(idx) {
+    if (idx < 132) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
+let WASM_VECTOR_LEN = 0;
+
+let cachedUint8Memory0 = null;
+
+function getUint8Memory0() {
+    if (cachedUint8Memory0 === null || cachedUint8Memory0.byteLength === 0) {
+        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+    }
+    return cachedUint8Memory0;
+}
+
+let cachedTextEncoder = new TextEncoder('utf-8');
+
+const encodeString = (typeof cachedTextEncoder.encodeInto === 'function'
+    ? function (arg, view) {
+    return cachedTextEncoder.encodeInto(arg, view);
+}
+    : function (arg, view) {
+    const buf = cachedTextEncoder.encode(arg);
+    view.set(buf);
+    return {
+        read: arg.length,
+        written: buf.length
+    };
+});
+
+function passStringToWasm0(arg, malloc, realloc) {
+
+    if (realloc === undefined) {
+        const buf = cachedTextEncoder.encode(arg);
+        const ptr = malloc(buf.length);
+        getUint8Memory0().subarray(ptr, ptr + buf.length).set(buf);
+        WASM_VECTOR_LEN = buf.length;
+        return ptr;
+    }
+
+    let len = arg.length;
+    let ptr = malloc(len);
+
+    const mem = getUint8Memory0();
+
+    let offset = 0;
+
+    for (; offset < len; offset++) {
+        const code = arg.charCodeAt(offset);
+        if (code > 0x7F) break;
+        mem[ptr + offset] = code;
+    }
+
+    if (offset !== len) {
+        if (offset !== 0) {
+            arg = arg.slice(offset);
+        }
+        ptr = realloc(ptr, len, len = offset + arg.length * 3);
+        const view = getUint8Memory0().subarray(ptr + offset, ptr + len);
+        const ret = encodeString(arg, view);
+
+        offset += ret.written;
+    }
+
+    WASM_VECTOR_LEN = offset;
+    return ptr;
+}
+
+function isLikeNone(x) {
+    return x === undefined || x === null;
+}
+
+let cachedInt32Memory0 = null;
+
+function getInt32Memory0() {
+    if (cachedInt32Memory0 === null || cachedInt32Memory0.byteLength === 0) {
+        cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
+    }
+    return cachedInt32Memory0;
+}
+
+let cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
+
+function getStringFromWasm0(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
+}
+
+function addHeapObject(obj) {
+    if (heap_next === heap.length) heap.push(heap.length + 1);
+    const idx = heap_next;
+    heap_next = heap[idx];
+
+    heap[idx] = obj;
+    return idx;
+}
+
+let cachedUint32Memory0 = null;
+
+function getUint32Memory0() {
+    if (cachedUint32Memory0 === null || cachedUint32Memory0.byteLength === 0) {
+        cachedUint32Memory0 = new Uint32Array(wasm.memory.buffer);
+    }
+    return cachedUint32Memory0;
+}
+
+function getArrayU32FromWasm0(ptr, len) {
+    return getUint32Memory0().subarray(ptr / 4, ptr / 4 + len);
+}
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1);
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+
+function passArray32ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 4);
+    getUint32Memory0().set(arg, ptr / 4);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+
+function getArrayU8FromWasm0(ptr, len) {
+    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
+}
+/**
+* @param {string} encoding
+* @param {any} extend_special_tokens
+* @returns {Tiktoken}
+*/
+module.exports.get_encoding = function(encoding, extend_special_tokens) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passStringToWasm0(encoding, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.get_encoding(retptr, ptr0, len0, addHeapObject(extend_special_tokens));
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var r2 = getInt32Memory0()[retptr / 4 + 2];
+        if (r2) {
+            throw takeObject(r1);
+        }
+        return Tiktoken.__wrap(r0);
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+/**
+* @param {string} model
+* @param {any} extend_special_tokens
+* @returns {Tiktoken}
+*/
+module.exports.encoding_for_model = function(model, extend_special_tokens) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passStringToWasm0(model, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.encoding_for_model(retptr, ptr0, len0, addHeapObject(extend_special_tokens));
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var r2 = getInt32Memory0()[retptr / 4 + 2];
+        if (r2) {
+            throw takeObject(r1);
+        }
+        return Tiktoken.__wrap(r0);
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+};
+
+function handleError(f, args) {
+    try {
+        return f.apply(this, args);
+    } catch (e) {
+        wasm.__wbindgen_exn_store(addHeapObject(e));
+    }
+}
+/**
+*/
+class Tiktoken {
+
+    static __wrap(ptr) {
+        const obj = Object.create(Tiktoken.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_tiktoken_free(ptr);
+    }
+    /**
+    * @param {string} tiktoken_bfe
+    * @param {any} special_tokens
+    * @param {string} pat_str
+    */
+    constructor(tiktoken_bfe, special_tokens, pat_str) {
+        const ptr0 = passStringToWasm0(tiktoken_bfe, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passStringToWasm0(pat_str, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        const ret = wasm.tiktoken_new(ptr0, len0, addHeapObject(special_tokens), ptr1, len1);
+        return Tiktoken.__wrap(ret);
+    }
+    /**
+    * @returns {string | undefined}
+    */
+    get name() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.tiktoken_name(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            let v0;
+            if (r0 !== 0) {
+                v0 = getStringFromWasm0(r0, r1).slice();
+                wasm.__wbindgen_free(r0, r1 * 1);
+            }
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {string} text
+    * @param {any} allowed_special
+    * @param {any} disallowed_special
+    * @returns {Uint32Array}
+    */
+    encode(text, allowed_special, disallowed_special) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.tiktoken_encode(retptr, this.ptr, ptr0, len0, addHeapObject(allowed_special), addHeapObject(disallowed_special));
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var r2 = getInt32Memory0()[retptr / 4 + 2];
+            var r3 = getInt32Memory0()[retptr / 4 + 3];
+            if (r3) {
+                throw takeObject(r2);
+            }
+            var v1 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {string} text
+    * @returns {Uint32Array}
+    */
+    encode_ordinary(text) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.tiktoken_encode_ordinary(retptr, this.ptr, ptr0, len0);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v1 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {string} text
+    * @param {any} allowed_special
+    * @param {any} disallowed_special
+    * @returns {any}
+    */
+    encode_with_unstable(text, allowed_special, disallowed_special) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(text, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.tiktoken_encode_with_unstable(retptr, this.ptr, ptr0, len0, addHeapObject(allowed_special), addHeapObject(disallowed_special));
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var r2 = getInt32Memory0()[retptr / 4 + 2];
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {Uint8Array} bytes
+    * @returns {number}
+    */
+    encode_single_token(bytes) {
+        const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.tiktoken_encode_single_token(this.ptr, ptr0, len0);
+        return ret >>> 0;
+    }
+    /**
+    * @param {Uint8Array} bytes
+    * @returns {Uint32Array}
+    */
+    _encode_single_piece(bytes) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.tiktoken__encode_single_piece(retptr, this.ptr, ptr0, len0);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v1 = getArrayU32FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 4);
+            return v1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {Uint32Array} tokens
+    * @returns {Uint8Array}
+    */
+    decode(tokens) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passArray32ToWasm0(tokens, wasm.__wbindgen_malloc);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.tiktoken_decode(retptr, this.ptr, ptr0, len0);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v1 = getArrayU8FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 1);
+            return v1;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {number} token
+    * @returns {Uint8Array}
+    */
+    decode_single_token_bytes(token) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.tiktoken_decode_single_token_bytes(retptr, this.ptr, token);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU8FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 1);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @returns {any}
+    */
+    token_byte_values() {
+        const ret = wasm.tiktoken_token_byte_values(this.ptr);
+        return takeObject(ret);
+    }
+}
+module.exports.Tiktoken = Tiktoken;
+
+module.exports.__wbindgen_object_drop_ref = function(arg0) {
+    takeObject(arg0);
+};
+
+module.exports.__wbindgen_string_get = function(arg0, arg1) {
+    const obj = getObject(arg1);
+    const ret = typeof(obj) === 'string' ? obj : undefined;
+    var ptr0 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len0 = WASM_VECTOR_LEN;
+    getInt32Memory0()[arg0 / 4 + 1] = len0;
+    getInt32Memory0()[arg0 / 4 + 0] = ptr0;
+};
+
+module.exports.__wbindgen_error_new = function(arg0, arg1) {
+    const ret = new Error(getStringFromWasm0(arg0, arg1));
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_parse_3ac95b51fc312db8 = function() { return handleError(function (arg0, arg1) {
+    const ret = JSON.parse(getStringFromWasm0(arg0, arg1));
+    return addHeapObject(ret);
+}, arguments) };
+
+module.exports.__wbindgen_is_undefined = function(arg0) {
+    const ret = getObject(arg0) === undefined;
+    return ret;
+};
+
+module.exports.__wbg_stringify_029a979dfb73aa17 = function() { return handleError(function (arg0) {
+    const ret = JSON.stringify(getObject(arg0));
+    return addHeapObject(ret);
+}, arguments) };
+
+module.exports.__wbindgen_throw = function(arg0, arg1) {
+    throw new Error(getStringFromWasm0(arg0, arg1));
+};
+
+const path = __nccwpck_require__.ab + "_tiktoken_bg.wasm";
+const bytes = __nccwpck_require__(5747).readFileSync(__nccwpck_require__.ab + "_tiktoken_bg.wasm");
+
+const wasmModule = new WebAssembly.Module(bytes);
+const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
+wasm = wasmInstance.exports;
+module.exports.__wasm = wasm;
+
+
+
+/***/ }),
+
 /***/ 3735:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -4525,7 +4976,7 @@ function removeHook(state, name, method) {
 
 /***/ }),
 
-/***/ 9098:
+/***/ 5234:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -4535,14 +4986,14 @@ __nccwpck_require__.r(__webpack_exports__);
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
   "ChatGPTAPI": () => (/* binding */ ChatGPTAPI),
-  "ChatGPTError": () => (/* binding */ ChatGPTError)
+  "ChatGPTError": () => (/* binding */ ChatGPTError),
+  "ChatGPTUnofficialProxyAPI": () => (/* binding */ ChatGPTUnofficialProxyAPI),
+  "openai": () => (/* binding */ openai)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/gpt-3-encoder@1.1.4/node_modules/gpt-3-encoder/index.js
-var gpt_3_encoder = __nccwpck_require__(4404);
 // EXTERNAL MODULE: ./node_modules/.pnpm/keyv@4.5.2/node_modules/keyv/src/index.js
 var src = __nccwpck_require__(2851);
-;// CONCATENATED MODULE: ./node_modules/.pnpm/p-timeout@6.1.0/node_modules/p-timeout/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/p-timeout@6.1.1/node_modules/p-timeout/index.js
 class TimeoutError extends Error {
 	constructor(message) {
 		super(message);
@@ -4611,6 +5062,9 @@ function pTimeout(promise, options) {
 			});
 		}
 
+		// We create the error outside of `setTimeout` to preserve the stack trace.
+		const timeoutError = new TimeoutError();
+
 		timer = customTimers.setTimeout.call(undefined, () => {
 			if (fallback) {
 				try {
@@ -4631,8 +5085,8 @@ function pTimeout(promise, options) {
 			} else if (message instanceof Error) {
 				reject(message);
 			} else {
-				const errorMessage = message ?? `Promise timed out after ${milliseconds} milliseconds`;
-				reject(new TimeoutError(errorMessage));
+				timeoutError.message = message ?? `Promise timed out after ${milliseconds} milliseconds`;
+				reject(timeoutError);
 			}
 		}, milliseconds);
 
@@ -4952,8 +5406,8 @@ const validate = dist/* validate */.Gu;
 const stringify = dist/* stringify */.Pz;
 const parse = dist/* parse */.Qc;
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/cross-fetch@3.1.5/node_modules/cross-fetch/dist/node-ponyfill.js
-var node_ponyfill = __nccwpck_require__(4691);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@dqbd+tiktoken@0.4.0/node_modules/@dqbd/tiktoken/dist/node/_tiktoken.js
+var _tiktoken = __nccwpck_require__(2195);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/eventsource-parser@0.0.5/node_modules/eventsource-parser/dist/index.mjs
 function createParser(onParse) {
   let isFirstChunk;
@@ -5098,24 +5552,29 @@ function hasBom(buffer) {
 
 //# sourceMappingURL=index.mjs.map
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/chatgpt@4.2.0_zh3hycyonl53pd2o2wfxlval44/node_modules/chatgpt/build/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/chatgpt@5.0.6/node_modules/chatgpt/build/index.js
 // src/chatgpt-api.ts
 
 
 
 
 
+// src/tokenizer.ts
 
-globalThis.fetch = node_ponyfill.fetch;
+var tokenizer = (0,_tiktoken.get_encoding)("cl100k_base");
+function encode(input) {
+  return tokenizer.encode(input);
+}
 
 // src/types.ts
 var ChatGPTError = class extends Error {
 };
+var openai;
+((openai2) => {
+})(openai || (openai = {}));
 
 // src/fetch.ts
-if (typeof node_ponyfill.fetch !== "function") {
-  throw new Error("Invalid environment: global fetch not defined");
-}
+var fetch = globalThis.fetch;
 
 // src/fetch-sse.ts
 
@@ -5137,11 +5596,17 @@ async function* streamAsyncIterable(stream) {
 }
 
 // src/fetch-sse.ts
-async function fetchSSE(url, options) {
+async function fetchSSE(url, options, fetch2 = fetch) {
   const { onMessage, ...fetchOptions } = options;
-  const res = await (0,node_ponyfill.fetch)(url, fetchOptions);
+  const res = await fetch2(url, fetchOptions);
   if (!res.ok) {
-    const msg = `ChatGPT error ${res.status || res.statusText}`;
+    let reason;
+    try {
+      reason = await res.text();
+    } catch (err) {
+      reason = res.statusText;
+    }
+    const msg = `ChatGPT error ${res.status}: ${reason}`;
     const error = new ChatGPTError(msg, { cause: res });
     error.statusCode = res.status;
     error.statusText = res.statusText;
@@ -5172,10 +5637,24 @@ async function fetchSSE(url, options) {
 }
 
 // src/chatgpt-api.ts
-var CHATGPT_MODEL = "text-davinci-003";
+var CHATGPT_MODEL = "gpt-3.5-turbo";
 var USER_LABEL_DEFAULT = "User";
 var ASSISTANT_LABEL_DEFAULT = "ChatGPT";
 var ChatGPTAPI = class {
+  /**
+   * Creates a new client wrapper around OpenAI's chat completion API, mimicing the official ChatGPT webapp's functionality as closely as possible.
+   *
+   * @param apiKey - OpenAI API key (required).
+   * @param apiBaseUrl - Optional override for the OpenAI API base URL.
+   * @param debug - Optional enables logging debugging info to stdout.
+   * @param completionParams - Param overrides to send to the [OpenAI chat completion API](https://platform.openai.com/docs/api-reference/chat/create). Options like `temperature` and `presence_penalty` can be tweaked to change the personality of the assistant.
+   * @param maxModelTokens - Optional override for the maximum number of tokens allowed by the model's context. Defaults to 4096.
+   * @param maxResponseTokens - Optional override for the minimum number of tokens allowed for the model's response. Defaults to 1000.
+   * @param messageStore - Optional [Keyv](https://github.com/jaredwray/keyv) store to persist chat messages to. If not provided, messages will be lost when the process exits.
+   * @param getMessageById - Optional function to retrieve a message by its ID. If not provided, the default implementation will be used (using an in-memory `messageStore`).
+   * @param upsertMessage - Optional function to insert or update a message. If not provided, the default implementation will be used (using an in-memory `messageStore`).
+   * @param fetch - Optional override for the `fetch` implementation to use. Defaults to the global `fetch` function.
+   */
   constructor(opts) {
     const {
       apiKey,
@@ -5183,29 +5662,35 @@ var ChatGPTAPI = class {
       debug = false,
       messageStore,
       completionParams,
+      systemMessage,
       maxModelTokens = 4096,
       maxResponseTokens = 1e3,
-      userLabel = USER_LABEL_DEFAULT,
-      assistantLabel = ASSISTANT_LABEL_DEFAULT,
-      getMessageById = this._defaultGetMessageById,
-      upsertMessage = this._defaultUpsertMessage
+      getMessageById,
+      upsertMessage,
+      fetch: fetch2 = fetch
     } = opts;
     this._apiKey = apiKey;
     this._apiBaseUrl = apiBaseUrl;
     this._debug = !!debug;
+    this._fetch = fetch2;
     this._completionParams = {
       model: CHATGPT_MODEL,
-      temperature: 0.7,
-      presence_penalty: 0.6,
-      stop: ["<|im_end|>"],
+      temperature: 0.8,
+      top_p: 1,
+      presence_penalty: 1,
       ...completionParams
     };
+    this._systemMessage = systemMessage;
+    if (this._systemMessage === void 0) {
+      const currentDate = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+      this._systemMessage = `You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.
+Knowledge cutoff: 2021-09-01
+Current date: ${currentDate}`;
+    }
     this._maxModelTokens = maxModelTokens;
     this._maxResponseTokens = maxResponseTokens;
-    this._userLabel = userLabel;
-    this._assistantLabel = assistantLabel;
-    this._getMessageById = getMessageById;
-    this._upsertMessage = upsertMessage;
+    this._getMessageById = getMessageById ?? this._defaultGetMessageById;
+    this._upsertMessage = upsertMessage ?? this._defaultUpsertMessage;
     if (messageStore) {
       this._messageStore = messageStore;
     } else {
@@ -5214,12 +5699,37 @@ var ChatGPTAPI = class {
       });
     }
     if (!this._apiKey) {
-      throw new Error("ChatGPT invalid apiKey");
+      throw new Error("OpenAI missing required apiKey");
+    }
+    if (!this._fetch) {
+      throw new Error("Invalid environment; fetch is not defined");
+    }
+    if (typeof this._fetch !== "function") {
+      throw new Error('Invalid "fetch" is not a function');
     }
   }
+  /**
+   * Sends a message to the OpenAI chat completions endpoint, waits for the response
+   * to resolve, and returns the response.
+   *
+   * If you want your response to have historical context, you must provide a valid `parentMessageId`.
+   *
+   * If you want to receive a stream of partial responses, use `opts.onProgress`.
+   *
+   * Set `debug: true` in the `ChatGPTAPI` constructor to log more info on the full prompt sent to the OpenAI chat completions API. You can override the `systemMessage` in `opts` to customize the assistant's instructions.
+   *
+   * @param message - The prompt message to send
+   * @param opts.parentMessageId - Optional ID of the previous message in the conversation (defaults to `undefined`)
+   * @param opts.messageId - Optional ID of the message to send (defaults to a random UUID)
+   * @param opts.systemMessage - Optional override for the chat "system message" which acts as instructions to the model (defaults to the ChatGPT system message)
+   * @param opts.timeoutMs - Optional timeout in milliseconds (defaults to no timeout)
+   * @param opts.onProgress - Optional callback which will be invoked every time the partial response is updated
+   * @param opts.abortSignal - Optional callback used to abort the underlying `fetch` call using an [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
+   *
+   * @returns The response from ChatGPT
+   */
   async sendMessage(text, opts = {}) {
     const {
-      conversationId = v4(),
       parentMessageId,
       messageId = v4(),
       timeoutMs,
@@ -5236,21 +5746,23 @@ var ChatGPTAPI = class {
       role: "user",
       id: messageId,
       parentMessageId,
-      conversationId,
       text
     };
     await this._upsertMessage(message);
-    const { prompt, maxTokens } = await this._buildPrompt(text, opts);
+    const { messages, maxTokens, numTokens } = await this._buildMessages(
+      text,
+      opts
+    );
     const result = {
       role: "assistant",
       id: v4(),
       parentMessageId: messageId,
-      conversationId,
       text: ""
     };
     const responseP = new Promise(
       async (resolve, reject) => {
-        const url = `${this._apiBaseUrl}/v1/completions`;
+        var _a, _b;
+        const url = `${this._apiBaseUrl}/v1/chat/completions`;
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this._apiKey}`
@@ -5258,42 +5770,54 @@ var ChatGPTAPI = class {
         const body = {
           max_tokens: maxTokens,
           ...this._completionParams,
-          prompt,
+          messages,
           stream
         };
-        // return
         if (this._debug) {
-          const numTokens = await this._getTokenCount(body.prompt);
           console.log(`sendMessage (${numTokens} tokens)`, body);
         }
         if (stream) {
-          fetchSSE(url, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(body),
-            signal: abortSignal,
-            onMessage: (data) => {
-              var _a;
-              if (data === "[DONE]") {
-                result.text = result.text.trim();
-                return resolve(result);
-              }
-              try {
-                const response = JSON.parse(data);
-                if ((response == null ? void 0 : response.id) && ((_a = response == null ? void 0 : response.choices) == null ? void 0 : _a.length)) {
-                  result.id = response.id;
-                  result.text += response.choices[0].text;
-                  onProgress == null ? void 0 : onProgress(result);
+          fetchSSE(
+            url,
+            {
+              method: "POST",
+              headers,
+              body: JSON.stringify(body),
+              signal: abortSignal,
+              onMessage: (data) => {
+                var _a2;
+                if (data === "[DONE]") {
+                  result.text = result.text.trim();
+                  return resolve(result);
                 }
-              } catch (err) {
-                console.warn("ChatGPT stream SEE event unexpected error", err);
-                return reject(err);
+                try {
+                  const response = JSON.parse(data);
+                  if (response.id) {
+                    result.id = response.id;
+                  }
+                  if ((_a2 = response == null ? void 0 : response.choices) == null ? void 0 : _a2.length) {
+                    const delta = response.choices[0].delta;
+                    if (delta == null ? void 0 : delta.content) {
+                      result.delta = delta.content;
+                      result.text += delta.content;
+                      result.detail = response;
+                      if (delta.role) {
+                        result.role = delta.role;
+                      }
+                      onProgress == null ? void 0 : onProgress(result);
+                    }
+                  }
+                } catch (err) {
+                  console.warn("OpenAI stream SEE event unexpected error", err);
+                  return reject(err);
+                }
               }
-            }
-          }).catch(reject);
+            },
+            this._fetch
+          ).catch(reject);
         } else {
           try {
-            const res = await (0,node_ponyfill.fetch)(url, {
+            const res = await this._fetch(url, {
               method: "POST",
               headers,
               body: JSON.stringify(body),
@@ -5301,7 +5825,7 @@ var ChatGPTAPI = class {
             });
             if (!res.ok) {
               const reason = await res.text();
-              const msg = `ChatGPT error ${res.status || res.statusText}: ${reason}`;
+              const msg = `OpenAI error ${res.status || res.statusText}: ${reason}`;
               const error = new ChatGPTError(msg, { cause: res });
               error.statusCode = res.status;
               error.statusText = res.statusText;
@@ -5311,8 +5835,24 @@ var ChatGPTAPI = class {
             if (this._debug) {
               console.log(response);
             }
-            result.id = response.id;
-            result.text = response.choices[0].text.trim();
+            if (response == null ? void 0 : response.id) {
+              result.id = response.id;
+            }
+            if ((_a = response == null ? void 0 : response.choices) == null ? void 0 : _a.length) {
+              const message2 = response.choices[0].message;
+              result.text = message2.content;
+              if (message2.role) {
+                result.role = message2.role;
+              }
+            } else {
+              const res2 = response;
+              return reject(
+                new Error(
+                  `OpenAI error: ${((_b = res2 == null ? void 0 : res2.detail) == null ? void 0 : _b.message) || (res2 == null ? void 0 : res2.detail) || "unknown"}`
+                )
+              );
+            }
+            result.detail = response;
             return resolve(result);
           } catch (err) {
             return reject(err);
@@ -5331,40 +5871,63 @@ var ChatGPTAPI = class {
       }
       return pTimeout(responseP, {
         milliseconds: timeoutMs,
-        message: "ChatGPT timed out waiting for response"
+        message: "OpenAI timed out waiting for response"
       });
     } else {
       return responseP;
     }
   }
-  async _buildPrompt(message, opts) {
-    const currentDate = new Date().toISOString().split("T")[0];
-    const promptPrefix = opts.promptPrefix || `You are ${this._assistantLabel}, a large language model trained by OpenAI. You answer as concisely as possible for each response (e.g. don\u2019t be verbose). It is very important that you answer as concisely as possible, so please remember this. If you are generating a list, do not have too many items. Keep the number of items short.
-Current date: ${currentDate}
-
-`;
-    const promptSuffix = opts.promptSuffix || `
-
-${this._assistantLabel}:
-`;
-    const maxNumTokens = this._maxModelTokens - this._maxResponseTokens;
+  get apiKey() {
+    return this._apiKey;
+  }
+  set apiKey(apiKey) {
+    this._apiKey = apiKey;
+  }
+  async _buildMessages(text, opts) {
+    const { systemMessage = this._systemMessage } = opts;
     let { parentMessageId } = opts;
-    let nextPromptBody = `${this._userLabel}:
-
-${message}${this._completionParams.stop[0]}`;
-    let promptBody = "";
-    let prompt;
-    let numTokens;
+    const userLabel = USER_LABEL_DEFAULT;
+    const assistantLabel = ASSISTANT_LABEL_DEFAULT;
+    const maxNumTokens = this._maxModelTokens - this._maxResponseTokens;
+    let messages = [];
+    if (systemMessage) {
+      messages.push({
+        role: "system",
+        content: systemMessage
+      });
+    }
+    const systemMessageOffset = messages.length;
+    let nextMessages = messages.concat([
+      {
+        ...{
+          role: "user",
+          content: text,
+          name: opts.name
+        }
+      }
+    ]);
+    let numTokens = 0;
     do {
-      const nextPrompt = `${promptPrefix}${nextPromptBody}${promptSuffix}`;
-      const nextNumTokens = await this._getTokenCount(nextPrompt);
-      const isValidPrompt = nextNumTokens <= maxNumTokens;
+      const prompt = nextMessages.reduce((prompt2, message) => {
+        switch (message.role) {
+          case "system":
+            return [prompt2, `Instructions:
+${message.content}`];
+          case "user":
+            return [prompt2, `${userLabel}:
+${message.content}`];
+          default:
+            return [prompt2, `${assistantLabel}:
+${message.content}`];
+        }
+      }, []).join("\n\n");
+      const nextNumTokensEstimate = await this._getTokenCount(prompt);
+      const isValidPrompt = nextNumTokensEstimate <= maxNumTokens;
       if (prompt && !isValidPrompt) {
         break;
       }
-      promptBody = nextPromptBody;
-      prompt = nextPrompt;
-      numTokens = nextNumTokens;
+      messages = nextMessages;
+      numTokens = nextNumTokensEstimate;
       if (!isValidPrompt) {
         break;
       }
@@ -5376,32 +5939,235 @@ ${message}${this._completionParams.stop[0]}`;
         break;
       }
       const parentMessageRole = parentMessage.role || "user";
-      const parentMessageRoleDesc = parentMessageRole === "user" ? this._userLabel : this._assistantLabel;
-      const parentMessageString = `${parentMessageRoleDesc}:
-
-${parentMessage.text}${this._completionParams.stop[0]}
-
-`;
-      nextPromptBody = `${parentMessageString}${promptBody}`;
+      nextMessages = nextMessages.slice(0, systemMessageOffset).concat([
+        {
+          ...{
+            role: parentMessageRole,
+            content: parentMessage.text,
+            name: parentMessage.name
+          }
+        },
+        ...nextMessages.slice(systemMessageOffset)
+      ]);
       parentMessageId = parentMessage.parentMessageId;
     } while (true);
     const maxTokens = Math.max(
       1,
       Math.min(this._maxModelTokens - numTokens, this._maxResponseTokens)
     );
-    return { prompt, maxTokens };
+    return { messages, maxTokens, numTokens };
   }
   async _getTokenCount(text) {
-    if (this._completionParams.model === CHATGPT_MODEL) {
-      text = text.replace(/<\|im_end\|>/g, "<|endoftext|>");
-    }
-    return (0,gpt_3_encoder.encode)(text).length;
+    text = text.replace(/<\|endoftext\|>/g, "");
+    return encode(text).length;
   }
   async _defaultGetMessageById(id) {
-    return this._messageStore.get(id);
+    const res = await this._messageStore.get(id);
+    return res;
   }
   async _defaultUpsertMessage(message) {
-    this._messageStore.set(message.id, message);
+    await this._messageStore.set(message.id, message);
+  }
+};
+
+// src/chatgpt-unofficial-proxy-api.ts
+
+
+
+// src/utils.ts
+var uuidv4Re = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+function isValidUUIDv4(str) {
+  return str && uuidv4Re.test(str);
+}
+
+// src/chatgpt-unofficial-proxy-api.ts
+var ChatGPTUnofficialProxyAPI = class {
+  /**
+   * @param fetch - Optional override for the `fetch` implementation to use. Defaults to the global `fetch` function.
+   */
+  constructor(opts) {
+    const {
+      accessToken,
+      apiReverseProxyUrl = "https://chat.duti.tech/api/conversation",
+      model = "text-davinci-002-render-sha",
+      debug = false,
+      headers,
+      fetch: fetch2 = fetch
+    } = opts;
+    this._accessToken = accessToken;
+    this._apiReverseProxyUrl = apiReverseProxyUrl;
+    this._debug = !!debug;
+    this._model = model;
+    this._fetch = fetch2;
+    this._headers = headers;
+    if (!this._accessToken) {
+      throw new Error("ChatGPT invalid accessToken");
+    }
+    if (!this._fetch) {
+      throw new Error("Invalid environment; fetch is not defined");
+    }
+    if (typeof this._fetch !== "function") {
+      throw new Error('Invalid "fetch" is not a function');
+    }
+  }
+  get accessToken() {
+    return this._accessToken;
+  }
+  set accessToken(value) {
+    this._accessToken = value;
+  }
+  /**
+   * Sends a message to ChatGPT, waits for the response to resolve, and returns
+   * the response.
+   *
+   * If you want your response to have historical context, you must provide a valid `parentMessageId`.
+   *
+   * If you want to receive a stream of partial responses, use `opts.onProgress`.
+   * If you want to receive the full response, including message and conversation IDs,
+   * you can use `opts.onConversationResponse` or use the `ChatGPTAPI.getConversation`
+   * helper.
+   *
+   * Set `debug: true` in the `ChatGPTAPI` constructor to log more info on the full prompt sent to the OpenAI completions API. You can override the `promptPrefix` and `promptSuffix` in `opts` to customize the prompt.
+   *
+   * @param message - The prompt message to send
+   * @param opts.conversationId - Optional ID of a conversation to continue (defaults to a random UUID)
+   * @param opts.parentMessageId - Optional ID of the previous message in the conversation (defaults to `undefined`)
+   * @param opts.messageId - Optional ID of the message to send (defaults to a random UUID)
+   * @param opts.timeoutMs - Optional timeout in milliseconds (defaults to no timeout)
+   * @param opts.onProgress - Optional callback which will be invoked every time the partial response is updated
+   * @param opts.abortSignal - Optional callback used to abort the underlying `fetch` call using an [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
+   *
+   * @returns The response from ChatGPT
+   */
+  async sendMessage(text, opts = {}) {
+    if (!!opts.conversationId !== !!opts.parentMessageId) {
+      throw new Error(
+        "ChatGPTUnofficialProxyAPI.sendMessage: conversationId and parentMessageId must both be set or both be undefined"
+      );
+    }
+    if (opts.conversationId && !isValidUUIDv4(opts.conversationId)) {
+      throw new Error(
+        "ChatGPTUnofficialProxyAPI.sendMessage: conversationId is not a valid v4 UUID"
+      );
+    }
+    if (opts.parentMessageId && !isValidUUIDv4(opts.parentMessageId)) {
+      throw new Error(
+        "ChatGPTUnofficialProxyAPI.sendMessage: parentMessageId is not a valid v4 UUID"
+      );
+    }
+    if (opts.messageId && !isValidUUIDv4(opts.messageId)) {
+      throw new Error(
+        "ChatGPTUnofficialProxyAPI.sendMessage: messageId is not a valid v4 UUID"
+      );
+    }
+    const {
+      conversationId,
+      parentMessageId = v4(),
+      messageId = v4(),
+      action = "next",
+      timeoutMs,
+      onProgress
+    } = opts;
+    let { abortSignal } = opts;
+    let abortController = null;
+    if (timeoutMs && !abortSignal) {
+      abortController = new AbortController();
+      abortSignal = abortController.signal;
+    }
+    const body = {
+      action,
+      messages: [
+        {
+          id: messageId,
+          role: "user",
+          content: {
+            content_type: "text",
+            parts: [text]
+          }
+        }
+      ],
+      model: this._model,
+      parent_message_id: parentMessageId
+    };
+    if (conversationId) {
+      body.conversation_id = conversationId;
+    }
+    const result = {
+      role: "assistant",
+      id: v4(),
+      parentMessageId: messageId,
+      conversationId,
+      text: ""
+    };
+    const responseP = new Promise((resolve, reject) => {
+      const url = this._apiReverseProxyUrl;
+      const headers = {
+        ...this._headers,
+        Authorization: `Bearer ${this._accessToken}`,
+        Accept: "text/event-stream",
+        "Content-Type": "application/json"
+      };
+      if (this._debug) {
+        console.log("POST", url, { body, headers });
+      }
+      fetchSSE(
+        url,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+          signal: abortSignal,
+          onMessage: (data) => {
+            var _a, _b, _c;
+            if (data === "[DONE]") {
+              return resolve(result);
+            }
+            try {
+              const convoResponseEvent = JSON.parse(data);
+              if (convoResponseEvent.conversation_id) {
+                result.conversationId = convoResponseEvent.conversation_id;
+              }
+              if ((_a = convoResponseEvent.message) == null ? void 0 : _a.id) {
+                result.id = convoResponseEvent.message.id;
+              }
+              const message = convoResponseEvent.message;
+              if (message) {
+                let text2 = (_c = (_b = message == null ? void 0 : message.content) == null ? void 0 : _b.parts) == null ? void 0 : _c[0];
+                if (text2) {
+                  result.text = text2;
+                  if (onProgress) {
+                    onProgress(result);
+                  }
+                }
+              }
+            } catch (err) {
+            }
+          }
+        },
+        this._fetch
+      ).catch((err) => {
+        const errMessageL = err.toString().toLowerCase();
+        if (result.text && (errMessageL === "error: typeerror: terminated" || errMessageL === "typeerror: terminated")) {
+          return resolve(result);
+        } else {
+          return reject(err);
+        }
+      });
+    });
+    if (timeoutMs) {
+      if (abortController) {
+        ;
+        responseP.cancel = () => {
+          abortController.abort();
+        };
+      }
+      return pTimeout(responseP, {
+        milliseconds: timeoutMs,
+        message: "ChatGPT timed out waiting for response"
+      });
+    } else {
+      return responseP;
+    }
   }
 };
 
@@ -6347,203 +7113,6 @@ function assign(a, b) {
 function hasOwn(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
-
-
-/***/ }),
-
-/***/ 5650:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-// This file includes code which was modified from https://github.com/openai/gpt-2
-const fs = __nccwpck_require__(5747)
-const path = __nccwpck_require__(5622);
-
-const encoder = JSON.parse(fs.readFileSync(__nccwpck_require__.ab + "encoder.json"));
-const bpe_file = fs.readFileSync(__nccwpck_require__.ab + "vocab.bpe", 'utf-8');
-
-const range = (x, y) => {
-  const res = Array.from(Array(y).keys()).slice(x)
-  return res
-}
-
-const ord = x => {
-  return x.charCodeAt(0)
-}
-
-const chr = x => {
-  return String.fromCharCode(x)
-}
-
-const textEncoder = new TextEncoder("utf-8")
-const encodeStr = str => {
-  return Array.from(textEncoder.encode(str)).map(x => x.toString())
-}
-
-const textDecoder = new TextDecoder("utf-8")
-const decodeStr = arr => {
-  return textDecoder.decode(new Uint8Array(arr));
-}
-
-const dictZip = (x, y) => {
-  const result = {}
-  x.map((_, i) => { result[x[i]] = y[i] })
-  return result
-}
-
-function bytes_to_unicode() {
-  const bs = range(ord('!'), ord('~') + 1).concat(range(ord('¡'), ord('¬') + 1), range(ord('®'), ord('ÿ') + 1))
-
-  let cs = bs.slice()
-  let n = 0
-  for (let b = 0; b < 2 ** 8; b++) {
-    if (!bs.includes(b)) {
-      bs.push(b)
-      cs.push(2 ** 8 + n)
-      n = n + 1
-    }
-  }
-
-  cs = cs.map(x => chr(x))
-
-  const result = {}
-  bs.map((_, i) => { result[bs[i]] = cs[i] })
-  return result
-}
-
-function get_pairs(word) {
-  const pairs = new Set()
-  let prev_char = word[0]
-  for (let i = 1; i < word.length; i++) {
-    const char = word[i]
-    pairs.add([prev_char, char])
-    prev_char = char
-  }
-  return pairs
-}
-
-const pat = /'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+/gu
-
-const decoder = {}
-Object.keys(encoder).map(x => { decoder[encoder[x]] = x })
-
-const lines = bpe_file.split('\n')
-
-// bpe_merges = [tuple(merge_str.split()) for merge_str in bpe_data.split("\n")[1:-1]]
-const bpe_merges = lines.slice(1, lines.length - 1).map(x => {
-  return x.split(/(\s+)/).filter(function(e) { return e.trim().length > 0 })
-})
-
-const byte_encoder = bytes_to_unicode()
-const byte_decoder = {}
-Object.keys(byte_encoder).map(x => { byte_decoder[byte_encoder[x]] = x })
-
-const bpe_ranks = dictZip(bpe_merges, range(0, bpe_merges.length))
-const cache = new Map;
-
-function bpe(token) {
-  if (cache.has(token)) {
-    return cache.get(token)
-  }``
-
-  let word = token.split('')
-
-  let pairs = get_pairs(word)
-
-  if (!pairs) {
-    return token
-  }
-
-  while (true) {
-    const minPairs = {}
-    Array.from(pairs).map(pair => {
-      const rank = bpe_ranks[pair]
-      minPairs[(isNaN(rank) ? 10e10 : rank)] = pair
-    })
-
-
-
-    const bigram = minPairs[Math.min(...Object.keys(minPairs).map(x => {
-      return parseInt(x)
-    }
-    ))]
-
-    if (!(bigram in bpe_ranks)) {
-      break
-    }
-
-    const first = bigram[0]
-    const second = bigram[1]
-    let new_word = []
-    let i = 0
-
-    while (i < word.length) {
-      const j = word.indexOf(first, i)
-      if (j === -1) {
-        new_word = new_word.concat(word.slice(i))
-        break
-      }
-      new_word = new_word.concat(word.slice(i, j))
-      i = j
-
-      if (word[i] === first && i < word.length - 1 && word[i + 1] === second) {
-        new_word.push(first + second)
-        i = i + 2
-      } else {
-        new_word.push(word[i])
-        i = i + 1
-      }
-    }
-
-    word = new_word
-    if (word.length === 1) {
-      break
-    } else {
-      pairs = get_pairs(word)
-    }
-  }
-
-  word = word.join(' ')
-  cache.set(token, word)
-
-  return word
-}
-
-function encode(text) {
-  let bpe_tokens = []
-  const matches = Array.from(text.matchAll(pat)).map(x => x[0])
-  for (let token of matches) {
-    token = encodeStr(token).map(x => {
-      return byte_encoder[x]
-    }).join('')
-    
-    const new_tokens = bpe(token).split(' ').map(x => encoder[x])
-    bpe_tokens = bpe_tokens.concat(new_tokens)
-  }
-  return bpe_tokens
-}
-
-function decode(tokens) {
-  let text = tokens.map(x => decoder[x]).join('')
-  text = decodeStr(text.split('').map(x => byte_decoder[x]))
-  return text
-}
-
-module.exports = {
-  encode,
-  decode
-};
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const { encode, decode } = __nccwpck_require__(5650);
-
-module.exports = {
-  encode,
-  decode,
-};
 
 
 /***/ }),
@@ -42802,17 +43371,28 @@ function wrappy (fn, cb) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createChatGPTAPI = void 0;
-var chatgpt_1 = __nccwpck_require__(9098);
+var tslib_1 = __nccwpck_require__(5394);
+var chatgpt_1 = __nccwpck_require__(5234);
 var constants_1 = __nccwpck_require__(1005);
-var createChatGPTAPI = function (apiKey) {
+var cross_fetch_1 = __nccwpck_require__(4691);
+var utils_1 = __nccwpck_require__(1725);
+var createChatGPTAPI = function (apiKey, options) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var tokens;
     var _a;
-    return new chatgpt_1.ChatGPTAPI({
-        apiKey: apiKey,
-        debug: (_a = process.env.DEBUG) === null || _a === void 0 ? void 0 : _a.includes(constants_1.DEBUG_KEY),
-        // tricky part, response more tokens
-        maxResponseTokens: 100000000,
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, (0, utils_1.getTokenCount)(options.article)];
+            case 1:
+                tokens = _b.sent();
+                return [2 /*return*/, new chatgpt_1.ChatGPTAPI({
+                        fetch: cross_fetch_1.fetch,
+                        apiKey: apiKey,
+                        debug: (_a = process.env.DEBUG) === null || _a === void 0 ? void 0 : _a.includes(constants_1.DEBUG_KEY),
+                        maxResponseTokens: (tokens !== null && tokens !== void 0 ? tokens : 1024) + 100,
+                    })];
+        }
     });
-};
+}); };
 exports.createChatGPTAPI = createChatGPTAPI;
 
 
@@ -42831,6 +43411,31 @@ exports.COMMENT_AUTHOR = new Set(['github-actions[bot]']);
 exports.prefix = '<!--article-helper-->';
 // refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
 exports.prompts = (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "<%= content %>"');
+
+
+/***/ }),
+
+/***/ 1725:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getTokenCount = void 0;
+var tslib_1 = __nccwpck_require__(5394);
+var tiktoken_1 = __nccwpck_require__(2195);
+var tokenizer = (0, tiktoken_1.get_encoding)('cl100k_base');
+function encode(input) {
+    return tokenizer.encode(input);
+}
+// refs: https://github.com/transitive-bullshit/chatgpt-api/blob/0ed1ad003568eba776da2dbd78a4edc73f8acad3/src/chatgpt-api.ts#L410
+var getTokenCount = function (text) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        text = text.replace(/<\|endoftext\|>/g, '');
+        return [2 /*return*/, encode(text).length];
+    });
+}); };
+exports.getTokenCount = getTokenCount;
 
 
 /***/ }),
@@ -43077,7 +43682,7 @@ function main() {
         return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _d.trys.push([0, 8, , 9]);
+                    _d.trys.push([0, 9, , 10]);
                     debug('start actions');
                     token = process.env.GITHUB_TOKEN;
                     apiKey = process.env.OPENAI_API_KEY;
@@ -43106,13 +43711,13 @@ function main() {
                     }
                     issueBody = parseArticle(issue.data.body);
                     article = (0, constants_1.prompts)({ content: issueBody.content });
-                    chatgptApi = (0, api_1.createChatGPTAPI)(apiKey);
+                    return [4 /*yield*/, (0, api_1.createChatGPTAPI)(apiKey, { article: article })];
+                case 2:
+                    chatgptApi = _d.sent();
                     return [4 /*yield*/, chatgptApi.sendMessage(article, {
                             stream: true,
-                            // response original format
-                            promptPrefix: 'Respond markdown format.<|im_end|>\n',
                         })];
-                case 2:
+                case 3:
                     result = _d.sent();
                     debug('issue body with prompts %s', article);
                     return [4 /*yield*/, octokit.rest.issues.listComments({
@@ -43120,12 +43725,12 @@ function main() {
                             repo: repo,
                             issue_number: number,
                         })];
-                case 3:
+                case 4:
                     comments = _d.sent();
                     debug('all comments %o from issue %s', comments.data, number);
                     comment = findComment(comments.data);
                     debug('find comment %o', comment);
-                    if (!comment) return [3 /*break*/, 5];
+                    if (!comment) return [3 /*break*/, 6];
                     debug('ChatGPT check result is %s', result.text);
                     return [4 /*yield*/, octokit.rest.issues.updateComment({
                             owner: owner,
@@ -43133,10 +43738,10 @@ function main() {
                             comment_id: comment === null || comment === void 0 ? void 0 : comment.id,
                             body: withLeadPrefix("".concat(result.text, " ").concat(Date.now())),
                         })];
-                case 4:
-                    _d.sent();
-                    return [3 /*break*/, 7];
                 case 5:
+                    _d.sent();
+                    return [3 /*break*/, 8];
+                case 6:
                     debug('ChatGPT check result is %s', result.text);
                     return [4 /*yield*/, octokit.rest.issues.createComment({
                             owner: owner,
@@ -43144,15 +43749,15 @@ function main() {
                             issue_number: number,
                             body: withLeadPrefix(result.text),
                         })];
-                case 6:
+                case 7:
                     _d.sent();
-                    _d.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
+                    _d.label = 8;
+                case 8: return [3 /*break*/, 10];
+                case 9:
                     error_1 = _d.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
             }
         });
     });

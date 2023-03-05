@@ -61,11 +61,9 @@ async function main() {
     }
     const issueBody = parseArticle(issue.data.body!)
     const article = prompts({ content: issueBody.content })
-    const chatgptApi = createChatGPTAPI(apiKey)
+    const chatgptApi = await createChatGPTAPI(apiKey, { article })
     const result = await chatgptApi.sendMessage(article, {
       stream: true,
-      // response original format
-      promptPrefix: 'Respond markdown format.<|im_end|>\n',
     })
     debug('issue body with prompts %s', article)
     // list all <number> comments to find specific comments

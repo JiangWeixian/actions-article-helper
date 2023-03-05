@@ -3,16 +3,15 @@ import { createChatGPTAPI } from '../src/api'
 import fs from 'fs/promises'
 import path from 'path'
 
-it('chatgpt', async () => {
+it('chatgpt: native grammar checker', async () => {
   // disable on github ci workflows
   if (process.env.CI) {
     return
   }
-  const content = (await fs.readFile(path.resolve(__dirname, './prompts.txt'))).toString('utf-8')
-  const client = createChatGPTAPI(process.env.OPENAI_API_KEY!)
-  const result = await client.sendMessage(content, {
+  const article = (await fs.readFile(path.resolve(__dirname, './prompts.txt'))).toString('utf-8')
+  const client = await createChatGPTAPI(process.env.OPENAI_API_KEY!, { article })
+  const result = await client.sendMessage(article, {
     stream: true,
-    promptPrefix: 'Respond markdown format.<|im_end|>\n',
   })
-  console.log(result.text)
+  fs.writeFile(path.resolve(__dirname, './prompts.snapshot.txt'), result.text)
 }, 1000000)
