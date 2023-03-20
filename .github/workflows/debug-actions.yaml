@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 16
     - name: debug actions
-      uses: jiangweixian/actions-article-helper@perf/tokens
+      uses: ./
       with:
         delimiters: "[\"<!--\", \"-->\"]"
         ownerOnly: true

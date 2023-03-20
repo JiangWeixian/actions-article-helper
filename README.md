@@ -44,10 +44,10 @@ jobs:
 ### params
 
 |name|description|default|
-|:---:|:---:|:---|
+|:---|:---|:---|
 |`delimiters`|If issue body contain markdown metadata, it use [gray-matter](https://www.npmjs.com/package/gray-matter) to strip it. e.g. `"[\"<!--\", \"-->\"]"` ||
 |`ownerOnly`|Only owners allowed to trigger actions|true|
-
+|`removeCodeblocks`|Remove code blocks in issue body(If you find the content of the comment incomplete, try to set this option to true)|false|
 
 ### permissions
 
