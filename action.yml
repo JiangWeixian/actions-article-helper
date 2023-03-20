@@ -8,6 +8,10 @@ inputs:
     description: only repo owner can trigger this action
     required: false
     default: true
+  removeCodeblocks:
+    description: remove code blocks before send to ChatGPT
+    required: false
+    default: false
 runs:
   using: "node16"
   main: "dist/index.js"

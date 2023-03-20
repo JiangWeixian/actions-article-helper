@@ -1,106 +1,130 @@
-I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article content is "## Why start build my blog in 2022
+I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article content is "<!--
+cover: https://user-images.githubusercontent.com/6839576/226186004-a5fd1446-be38-44ee-82af-44149e3ba9a5.png
+description: How to use ChatGPT as a tool for checking grammar and write summary in articles written on GitHub issues.
+-->
 
-For a long time, I always shame to express myself in public. Either in terms of ideas or what I was doing. However, I dream to be fulltime open-source developer or a freelance. I know It's a tough, but no doubt, #build-in-public is the first step.
+My blog site is built on top of GitHub issues. When I create or edit my issue on GitHub, `next.js` ISR will recreate my blog site in the background. Additionally, ChatGPT is an excellent AI assistant tool that can be used for many purposes, such as a search engine and language translator. As a non-native English speaker, I plan to add ChatGPT to my article writing workflow this weekend to check my articles' grammar like a native English speaker.
 
-#build-in-public not only help you [validate your ideas](https://blog.pragmaticengineer.com/how-to-become-a-full-time-creator/,), it can also [make you lucky area became larger](https://github.com/readme/guides/publishing-your-work).
+## TL;DR
 
-In here, I will share my ideas and attemps, and of course what I created.
-
-First thing I want share is *How I build my blog site in 2022*.
-
-## How it work
-
-### Requirements
-
-The reason I did't choose any popluar blog building tool, but start from scratch was that I wanted to take control of my site.
-
-When I was new to front-end, I choose `vuepress` to build my site. Everytime, I create a new post or edit a post, I have to `pull & commit & push` on my computer over and over again. Even `vuepress` is great tool, but I can't get focus on writing in this way.
-
-So I have some hard requirements for this blog site: I should focus on writing itself, and I want to be able to edit my content whenever and wherever I want.
-
-### Stacks
-
-I choose the following tech stack to build my site:
-
-- `Next.js` I much familiar with it than other framework. Another main reason is `ISR`, I will talk about how it work later.
-- `tailwind` It's awesome
-- `stitches` I used to use `styled-components` as my `CSS-in-JS` solution. When I meet `stitches`, I love much type safe API design. Currently, I use `stitches` with `tailwind` as my style solution.
-- `mayumi` A MacOS style UI libray, created by me.
-- `github issue` I like use `github issue `as my datasets. Because it's a dataset with a visual interface. Not only that, when you link another issue in issue content, you can find it looks like duplicate link.
-
-### Next.js ISR
-
-Back to `Next.js`, maybe it's hardest part in my blog site. I choose [`ISR`](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration) instead of `SSR`. `ISR` is something like the advanced version of `SSG`. For a blog site, lots of blog posts is much more "static", it's very suited to ISR.
-
-If you can go through this website for a while, there are two main parts in this blog site
-
-- `/issues` list all available posts(already published to public)
-- `/issues/[id]` display post content
-
-The great part of `ISR` is that, when I create a new post, it will re-update `/issues` and `/issues/[id]` at backend; If I only edit issue content, I can choose to re-update `/issues/[id]` page via  API `unstable_revalidate()`. 
-
-```ts
-// /pages/api/revalidate
-// ...
-console.log('[Next.js] Revalidating /issues')
-await res.unstable_revalidate('/issues')
-if (issueNumber) {
-  console.log(`[Next.js] Revalidating /issues/id/${issueNumber}`)
-  await res.unstable_revalidate(`/issues/id/${issueNumber}`)
-}
-// ...
-```
-
-I create a API route `/pages/api/revalidate` to update `/issues` or `/issues/[id]` manually. Get rid of the hell of repeated manual deployments over and over again.
-
-***But How do I know the time to call `/revalidate`***
-
-Remember, all my blog is saved in github issues. When I edit issue, github will trigger a event signal to invoke valid workflows. I can call `unstable_revalidate` in the following github workflow. 
+If you write articles on GitHub issues like me, you can use the https://github.com/JiangWeixian/actions-article-helper action in your blog repository.
 
 ```yaml
-name: Revalidate
+name: "article helper"
 on:
   issues:
-    types: ["opened", "edited", "labeled", "deleted", "closed", "reopened"]
-  push:
-    branches: ["main", "master"]
-  label:
+    types:
+      - "opened"
+      - "edited"
+
 jobs:
-  Revalidate:
-    timeout-minutes: 15
+  debug:
     runs-on: ubuntu-latest
     steps:
-      - name: revalidate
-         uses: actions/github-script@v6
-         env:
-           AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
-         with:
-           script: |
-             // revalidate `/issues` page
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
+    - name: article helper
+      uses: jiangweixian/actions-article-helper@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-I can `edit/create/delete` post anytime and anywhere.
+DEMO:
 
-## Organize with labels
+![image](https://user-images.githubusercontent.com/6839576/218319909-bc601e3d-942c-4c05-b49a-4fbab2057b23.png)
 
-***Before posts are ready to publish to public, how to preview it?***
 
-I divided the articles into two categories by github label named `issue-dev` and `issue`.
+## ChatGPT Open API
 
-- In `Vercel` preview & dev environment, we get the issue content with `issue` and `issue-dev` labels. 
-- In `Vercel` production environment, we get the issue content with `issue` label only.
+Lucky, ChatGPT provides an open API. First, you should create an `API_KEY` on the OpenAI platform (https://platform.openai.com/account/api-keys).
 
-## The end
+```ts
+import { ChatGPTAPI } from 'chatgpt'
 
-That's all about my personal blog, but not the end. I will continue update this post about blog site new features.
+export const createChatGPTAPI = (apiKey: string) => {
+  return new ChatGPTAPI({
+    apiKey, // add you open-ai API_KEY here
+  })
+}
+```
 
-Currently, it's still young, but I like it a lot, both the UI and the experience. I hope you will like it too.
+> package `chatgpt` is a request client wrapper the basic `open-ai` endpoint.
 
-I'd also like to add more and more awesome features:
+Now, you can send you article content(from issue body) to `ChatGPT`, let `ChatGPT` to check grammar and rewrite it.
 
-- rss and newsletter. 
-- display video
-- membership based on github sponsor
-- And a simple comment system so I can receive feedbacks.
+```js
+const client = createChatGPTAPI(apiKey)
+client.sendMessage(content)
+```
 
-*So on...*"
+By default, you can't send article content like `Hey, chatgpt help me check {{ content }} grammar`. Maybe it will not work as you expect.
+
+To make `ChatGPT` act as native English speaker, you need **prompts**. **prompts** like language(like `JavaScript or Rust`) that `ChatGPT` will understand better.
+
+Theres are lots of prompts you can play with from https://github.com/f/awesome-chatgpt-prompts.
+
+In order to make `ChatGPT` work as English native. Article content will send with the follow prompts, just replace `"istanbulu cok seviyom burada olmak cok guzel"` with real article content.
+
+> I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "istanbulu cok seviyom burada olmak cok guzel" 
+
+```js
+const client = createChatGPTAPI(apiKey)
+const result = await client.sendMessage(article, {
+  stream: true,
+  // response original markdown format
+  promptPrefix: 'Respond markdown format.<|im_end|>\n',
+})
+```
+
+You can also use ChatGPT to summary your article after grammar check with follow prompt.
+
+> Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.
+
+However, if you send this prompt directly. ChatGPT may not know "What's your article mentioned inside this prompts". Because when you invoke `sendMessage`, ChatGPT will create a new convention.
+
+You should ask ChatGPT in previous convention, how to do it? After grammar check, ChatGPT API response contain article results and convention id. Send convention id with summary prompt, now you can get right summary.
+
+![CleanShot 2023-03-20 at 09 59 45@2x](https://user-images.githubusercontent.com/6839576/226229645-793dce1c-1e28-42b9-93b4-5a4280faaebf.png)
+
+The main(hardest) part is complete, now we go further, and make it interaction with github actions.
+
+## Interaction with Github Actions
+
+First, get issue content
+
+```ts
+const issue = await octokit.rest.issues.get(params)
+```
+
+Then create comment under issue
+
+```ts
+await octokit.rest.issues.createComment({
+  ...,
+  body: result.text, // result is ChatGPT response result.
+})
+```
+
+That works great, but not perfect. Before issue publish, issue body will edit multiple times. If you don't wan't create too much comments, I need to find previous comment, and update it.
+
+```ts
+const comments = await octokit.rest.issues.listComments(params)
+// find comments by bot<github_actioins> start with `<!--article-helper-->`
+const comment = findComment(comments.data)
+debug('find comment %o', comment)
+if (comment) {
+  await octokit.rest.issues.updateComment({
+    owner,
+    repo,
+    comment_id: comment?.id,
+    body: withLeadPrefix(`${result.text} ${Date.now()}`),
+  })
+} else {
+  // create comment
+}
+```"

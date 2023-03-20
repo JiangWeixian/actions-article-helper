@@ -5,3 +5,4 @@ export declare const prompts: {
     check: import("lodash").TemplateExecutor;
     summarize: import("lodash").TemplateExecutor;
 };
+export declare const codeBlockRE: RegExp;

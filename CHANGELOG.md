@@ -1,5 +1,11 @@
 # actions-article-helper
 
+## 1.3.0
+
+### Minor Changes
+
+- caf9836: support remove blocks in article content
+
 ## 1.2.0
 
 ### Minor Changes
