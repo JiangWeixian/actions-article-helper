@@ -21,7 +21,8 @@ My blog site is built on top of GitHub issues. When I create or edit my issue on
 
 If you write articles on GitHub issues like me, you can use the https://github.com/JiangWeixian/actions-article-helper action in your blog repository.
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 DEMO:
 
@@ -32,13 +33,15 @@ DEMO:
 
 Lucky, ChatGPT provides an open API. First, you should create an \`API_KEY\` on the OpenAI platform (https://platform.openai.com/account/api-keys).
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 > package \`chatgpt\` is a request client wrapper the basic \`open-ai\` endpoint.
 
 Now, you can send you article content(from issue body) to \`ChatGPT\`, let \`ChatGPT\` to check grammar and rewrite it.
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 By default, you can't send article content like \`Hey, chatgpt help me check {{ content }} grammar\`. Maybe it will not work as you expect.
 
@@ -50,7 +53,8 @@ In order to make \`ChatGPT\` work as English native. Article content will send w
 
 > I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is \\"istanbulu cok seviyom burada olmak cok guzel\\" 
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 You can also use ChatGPT to summary your article after grammar check with follow prompt.
 
@@ -68,13 +72,16 @@ The main(hardest) part is complete, now we go further, and make it interaction w
 
 First, get issue content
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 Then create comment under issue
 
-\`\`\`\`\`\`
+\`\`\`
+\`\`\`
 
 That works great, but not perfect. Before issue publish, issue body will edit multiple times. If you don't wan't create too much comments, I need to find previous comment, and update it.
 
-\`\`\`\`\`\`\\""
+\`\`\`
+\`\`\`\\""
 `;

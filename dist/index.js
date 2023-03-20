@@ -43784,7 +43784,7 @@ var preprocess = function (content, _a) {
     var _b = _a === void 0 ? { removeCodeblocks: false } : _a, _c = _b.removeCodeblocks, removeCodeblocks = _c === void 0 ? false : _c;
     var resolvedContent = content;
     if (removeCodeblocks) {
-        resolvedContent = resolvedContent.replace(constants_1.codeBlockRE, '``````');
+        resolvedContent = resolvedContent.replace(constants_1.codeBlockRE, '```\n```');
     }
     return resolvedContent;
 };

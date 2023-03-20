@@ -21,7 +21,7 @@ export const getTokenCount = async (text: string) => {
 export const preprocess = (content: string, { removeCodeblocks = false }: { removeCodeblocks: boolean } = { removeCodeblocks: false }) => {
   let resolvedContent = content
   if (removeCodeblocks) {
-    resolvedContent = resolvedContent.replace(codeBlockRE, '``````')
+    resolvedContent = resolvedContent.replace(codeBlockRE, '```\n```')
   }
   return resolvedContent
 }
