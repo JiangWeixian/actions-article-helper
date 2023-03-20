@@ -9,3 +9,4 @@ export const prompts = {
   // refs: https://wfhbrian.com/the-best-way-to-summarize-a-paragraph-using-gpt-3/
   summarize: template('Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.'),
 }
+export const codeBlockRE = /`{3}[\s\S]*?`{3}/g

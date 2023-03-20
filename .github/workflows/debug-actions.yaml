@@ -20,6 +20,7 @@ jobs:
       with:
         delimiters: "[\"<!--\", \"-->\"]"
         ownerOnly: true
+        removeCodeblocks: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEBUG: neo:article-helper

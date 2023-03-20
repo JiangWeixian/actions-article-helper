@@ -43737,16 +43737,18 @@ exports.createChatGPTAPI = createChatGPTAPI;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prompts = exports.prefix = exports.COMMENT_AUTHOR = exports.DEBUG_KEY = void 0;
+exports.codeBlockRE = exports.prompts = exports.prefix = exports.COMMENT_AUTHOR = exports.DEBUG_KEY = void 0;
 var lodash_es_1 = __nccwpck_require__(5731);
 exports.DEBUG_KEY = 'neo:article-helper';
 exports.COMMENT_AUTHOR = new Set(['github-actions[bot]']);
 exports.prefix = '<!--article-helper-->';
-// refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
 exports.prompts = {
+    // refs: https://github.com/f/awesome-chatgpt-prompts#act-as-an-english-translator-and-improver
     check: (0, lodash_es_1.template)('I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is "<%= content %>"'),
+    // refs: https://wfhbrian.com/the-best-way-to-summarize-a-paragraph-using-gpt-3/
     summarize: (0, lodash_es_1.template)('Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.'),
 };
+exports.codeBlockRE = /`{3}[\s\S]*?`{3}/g;
 
 
 /***/ }),
@@ -43757,7 +43759,7 @@ exports.prompts = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.formatComment = exports.getTokenCount = void 0;
+exports.formatComment = exports.preprocess = exports.getTokenCount = void 0;
 var tslib_1 = __nccwpck_require__(5394);
 var tiktoken_1 = __nccwpck_require__(2195);
 var functional_md_1 = __nccwpck_require__(1595);
@@ -43774,6 +43776,19 @@ var getTokenCount = function (text) { return tslib_1.__awaiter(void 0, void 0, v
     });
 }); };
 exports.getTokenCount = getTokenCount;
+/**
+ * @description Preprocess markdown content, e.g.
+ * - remove code blocks
+ */
+var preprocess = function (content, _a) {
+    var _b = _a === void 0 ? { removeCodeblocks: false } : _a, _c = _b.removeCodeblocks, removeCodeblocks = _c === void 0 ? false : _c;
+    var resolvedContent = content;
+    if (removeCodeblocks) {
+        resolvedContent = resolvedContent.replace(constants_1.codeBlockRE, '``````');
+    }
+    return resolvedContent;
+};
+exports.preprocess = preprocess;
 var withLeadPrefix = function (body) {
     return "".concat(constants_1.prefix, "\n").concat(new Date(), "\n").concat(body);
 };
@@ -44017,8 +44032,10 @@ var findComment = function (comments) {
     return comments.find(function (comment) { var _a, _b, _c; return ((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) && constants_1.COMMENT_AUTHOR.has((_b = comment.user) === null || _b === void 0 ? void 0 : _b.login) && ((_c = comment.body) === null || _c === void 0 ? void 0 : _c.includes(constants_1.prefix)); });
 };
 var parseArticle = function (body) {
+    var _a;
     var meta = (0, gray_matter_1.default)(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined });
-    return tslib_1.__assign(tslib_1.__assign({}, meta), { data: meta.data });
+    var content = (0, utils_1.preprocess)(meta.content, { removeCodeblocks: (_a = Boolean(core.getInput('removeCodeblocks'))) !== null && _a !== void 0 ? _a : false });
+    return tslib_1.__assign(tslib_1.__assign({}, meta), { content: content, data: meta.data });
 };
 function main() {
     var _a;

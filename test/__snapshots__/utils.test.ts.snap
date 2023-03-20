@@ -8,3 +8,73 @@ exports[`format 1`] = `
   content
   "
 `;
+
+exports[`preprocess > remove code blocks 1`] = `
+"I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article content is \\"<!--
+cover: https://user-images.githubusercontent.com/6839576/226186004-a5fd1446-be38-44ee-82af-44149e3ba9a5.png
+description: How to use ChatGPT as a tool for checking grammar and write summary in articles written on GitHub issues.
+-->
+
+My blog site is built on top of GitHub issues. When I create or edit my issue on GitHub, \`next.js\` ISR will recreate my blog site in the background. Additionally, ChatGPT is an excellent AI assistant tool that can be used for many purposes, such as a search engine and language translator. As a non-native English speaker, I plan to add ChatGPT to my article writing workflow this weekend to check my articles' grammar like a native English speaker.
+
+## TL;DR
+
+If you write articles on GitHub issues like me, you can use the https://github.com/JiangWeixian/actions-article-helper action in your blog repository.
+
+\`\`\`\`\`\`
+
+DEMO:
+
+![image](https://user-images.githubusercontent.com/6839576/218319909-bc601e3d-942c-4c05-b49a-4fbab2057b23.png)
+
+
+## ChatGPT Open API
+
+Lucky, ChatGPT provides an open API. First, you should create an \`API_KEY\` on the OpenAI platform (https://platform.openai.com/account/api-keys).
+
+\`\`\`\`\`\`
+
+> package \`chatgpt\` is a request client wrapper the basic \`open-ai\` endpoint.
+
+Now, you can send you article content(from issue body) to \`ChatGPT\`, let \`ChatGPT\` to check grammar and rewrite it.
+
+\`\`\`\`\`\`
+
+By default, you can't send article content like \`Hey, chatgpt help me check {{ content }} grammar\`. Maybe it will not work as you expect.
+
+To make \`ChatGPT\` act as native English speaker, you need **prompts**. **prompts** like language(like \`JavaScript or Rust\`) that \`ChatGPT\` will understand better.
+
+Theres are lots of prompts you can play with from https://github.com/f/awesome-chatgpt-prompts.
+
+In order to make \`ChatGPT\` work as English native. Article content will send with the follow prompts, just replace \`\\"istanbulu cok seviyom burada olmak cok guzel\\"\` with real article content.
+
+> I want you to act as an English translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in English. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper level English words and sentences. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My markdown format article is \\"istanbulu cok seviyom burada olmak cok guzel\\" 
+
+\`\`\`\`\`\`
+
+You can also use ChatGPT to summary your article after grammar check with follow prompt.
+
+> Write short introduction with high source compression, removes stop words and summarizes the article whilst retaining meaning. The result is the shortest possible summary that retains all of the original meaning and context of the article.
+
+However, if you send this prompt directly. ChatGPT may not know \\"What's your article mentioned inside this prompts\\". Because when you invoke \`sendMessage\`, ChatGPT will create a new convention.
+
+You should ask ChatGPT in previous convention, how to do it? After grammar check, ChatGPT API response contain article results and convention id. Send convention id with summary prompt, now you can get right summary.
+
+![CleanShot 2023-03-20 at 09 59 45@2x](https://user-images.githubusercontent.com/6839576/226229645-793dce1c-1e28-42b9-93b4-5a4280faaebf.png)
+
+The main(hardest) part is complete, now we go further, and make it interaction with github actions.
+
+## Interaction with Github Actions
+
+First, get issue content
+
+\`\`\`\`\`\`
+
+Then create comment under issue
+
+\`\`\`\`\`\`
+
+That works great, but not perfect. Before issue publish, issue body will edit multiple times. If you don't wan't create too much comments, I need to find previous comment, and update it.
+
+\`\`\`\`\`\`\\""
+`;

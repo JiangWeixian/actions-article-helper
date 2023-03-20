@@ -1,6 +1,6 @@
 import { get_encoding } from '@dqbd/tiktoken'
 import { title } from 'functional-md'
-import { prefix } from './constants'
+import { codeBlockRE, prefix } from './constants'
 
 const tokenizer = get_encoding('cl100k_base')
 
@@ -12,6 +12,18 @@ function encode(input: string) {
 export const getTokenCount = async (text: string) => {
   text = text.replace(/<\|endoftext\|>/g, '')
   return encode(text).length
+}
+
+/**
+ * @description Preprocess markdown content, e.g.
+ * - remove code blocks
+ */
+export const preprocess = (content: string, { removeCodeblocks = false }: { removeCodeblocks: boolean } = { removeCodeblocks: false }) => {
+  let resolvedContent = content
+  if (removeCodeblocks) {
+    resolvedContent = resolvedContent.replace(codeBlockRE, '``````')
+  }
+  return resolvedContent
 }
 
 const withLeadPrefix = (body: string) => {

@@ -5,7 +5,7 @@ import matter from 'gray-matter'
 
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
-import { formatComment } from './utils'
+import { formatComment, preprocess } from './utils'
 
 const debug = Debug(DEBUG_KEY)
 
@@ -24,8 +24,10 @@ const findComment = (comments: Comment[]) => {
 
 const parseArticle = (body: string) => {
   const meta = matter(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined })
+  const content = preprocess(meta.content, { removeCodeblocks: Boolean(core.getInput('removeCodeblocks')) ?? false })
   return {
     ...meta,
+    content,
     data: meta.data,
   }
 }
