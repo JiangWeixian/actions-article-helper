@@ -43810,6 +43810,14 @@ module.exports = eval("require")("encoding");
 
 /***/ }),
 
+/***/ 3440:
+/***/ ((module) => {
+
+module.exports = eval("require")("lodash");
+
+
+/***/ }),
+
 /***/ 8136:
 /***/ ((module) => {
 
@@ -44024,6 +44032,7 @@ var core = tslib_1.__importStar(__nccwpck_require__(7535));
 var github = tslib_1.__importStar(__nccwpck_require__(3666));
 var debug_1 = tslib_1.__importDefault(__nccwpck_require__(7869));
 var gray_matter_1 = tslib_1.__importDefault(__nccwpck_require__(3880));
+var lodash_1 = __nccwpck_require__(3440);
 var api_1 = __nccwpck_require__(1724);
 var constants_1 = __nccwpck_require__(1005);
 var utils_1 = __nccwpck_require__(1725);
@@ -44034,6 +44043,9 @@ var findComment = function (comments) {
 var parseArticle = function (body) {
     var _a;
     var meta = (0, gray_matter_1.default)(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined });
+    if (!meta.data || (0, lodash_1.isEmpty)(meta.data)) {
+        meta = (0, gray_matter_1.default)(body);
+    }
     var content = (0, utils_1.preprocess)(meta.content, { removeCodeblocks: (_a = Boolean(core.getInput('removeCodeblocks'))) !== null && _a !== void 0 ? _a : false });
     return tslib_1.__assign(tslib_1.__assign({}, meta), { content: content, data: meta.data });
 };

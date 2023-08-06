@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
 import matter from 'gray-matter'
+import { isEmpty } from 'lodash'
 
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'
@@ -23,7 +24,10 @@ const findComment = (comments: Comment[]) => {
 }
 
 const parseArticle = (body: string) => {
-  const meta = matter(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined })
+  let meta = matter(body, { delimiters: core.getInput('delimiters') ? JSON.parse(core.getInput('delimiters')) : undefined })
+  if (!meta.data || isEmpty(meta.data)) {
+    meta = matter(body)
+  }
   const content = preprocess(meta.content, { removeCodeblocks: Boolean(core.getInput('removeCodeblocks')) ?? false })
   return {
     ...meta,
