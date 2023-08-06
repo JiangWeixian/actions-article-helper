@@ -1,5 +1,11 @@
 # actions-article-helper
 
+## 1.3.1
+
+### Patch Changes
+
+- 2f7fef7: support common gratter syntax
+
 ## 1.3.0
 
 ### Minor Changes
