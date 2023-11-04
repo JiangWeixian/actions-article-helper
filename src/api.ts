@@ -1,8 +1,8 @@
 import { ChatGPTAPI } from 'chatgpt'
+import { fetch } from 'cross-fetch'
 import Keyv from 'keyv'
 
 import { DEBUG_KEY } from './constants'
-import { fetch } from 'cross-fetch'
 import { getTokenCount } from './utils'
 
 export const createChatGPTAPI = async (apiKey: string, options: { article: string }) => {

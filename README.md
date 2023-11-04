@@ -16,29 +16,28 @@ Check https://github.com/JiangWeixian/actions-article-helper/issues/1 for more d
 ## usage
 
 ```yaml
-name: "article helper"
+name: article helper
 on:
   issues:
     types:
-      - "opened"
-      - "edited"
+      - opened
+      - edited
 
 jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
-    - name: setup node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16
-    - name: article helper
-      uses: jiangweixian/actions-article-helper@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: article helper
+        uses: jiangweixian/actions-article-helper@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 ### params

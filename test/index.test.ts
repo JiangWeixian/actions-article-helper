@@ -1,7 +1,9 @@
-import { expect, it } from 'vitest'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
+import { it } from 'vitest'
+
 import { createChatGPTAPI } from '../src/api'
-import fs from 'fs/promises'
-import path from 'path'
 
 it('chatgpt: native grammar checker & summarize', async () => {
   // disable on github ci workflows

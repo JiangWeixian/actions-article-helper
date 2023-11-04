@@ -1,27 +1,27 @@
-name: "debug actions"
+name: debug actions
 on:
   issues:
     types:
-      - "opened"
-      - "edited"
+      - opened
+      - edited
 
 jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
-    - name: setup node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16
-    - name: debug actions
-      uses: ./
-      with:
-        delimiters: "[\"<!--\", \"-->\"]"
-        ownerOnly: true
-        removeCodeblocks: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DEBUG: neo:article-helper
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: debug actions
+        uses: ./
+        with:
+          delimiters: "[\"<!--\", \"-->\"]"
+          ownerOnly: true
+          removeCodeblocks: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: neo:article-helper
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

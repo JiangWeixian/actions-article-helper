@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Debug from 'debug'
 import matter from 'gray-matter'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 
 import { createChatGPTAPI } from './api'
 import { COMMENT_AUTHOR, DEBUG_KEY, prefix, prompts } from './constants'

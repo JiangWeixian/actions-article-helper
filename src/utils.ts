@@ -1,5 +1,6 @@
 import { get_encoding } from '@dqbd/tiktoken'
 import { title } from 'functional-md'
+
 import { codeBlockRE, prefix } from './constants'
 
 const tokenizer = get_encoding('cl100k_base')

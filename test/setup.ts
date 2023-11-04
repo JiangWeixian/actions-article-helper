@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import path from 'node:path'
+
 import dotenv from 'dotenv'
-import path from 'path'
 
 dotenv.config({ path: path.resolve(__dirname, '../.env.development.local') })
