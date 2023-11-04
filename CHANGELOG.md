@@ -1,5 +1,11 @@
 # actions-article-helper
 
+## 1.3.2
+
+### Patch Changes
+
+- 38ae05a: lodash not found
+
 ## 1.3.1
 
 ### Patch Changes
