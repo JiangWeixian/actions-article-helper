@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { template } from 'lodash-es'
 
 export const DEBUG_KEY = 'neo:article-helper'

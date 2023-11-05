@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@actions/core': ^1.5.0
   '@actions/github': ^5.1.1
-  '@aiou/eslint-config': ^1.0.4
+  '@aiou/eslint-config': ^1.0.5
   '@changesets/cli': ^2.17.0
   '@dqbd/tiktoken': ^0.4.0
   '@types/debug': ^4.1.7
@@ -41,7 +41,7 @@ dependencies:
   keyv: 4.5.2
 
 devDependencies:
-  '@aiou/eslint-config': 1.0.4_bdjfo4nt5w6vivygtrkrhl46dy
+  '@aiou/eslint-config': 1.0.5_bdjfo4nt5w6vivygtrkrhl46dy
   '@changesets/cli': 2.26.0
   '@types/debug': 4.1.7
   '@types/lodash-es': 4.17.10
@@ -91,8 +91,8 @@ packages:
       tunnel: 0.0.6
     dev: false
 
-  /@aiou/eslint-config/1.0.4_bdjfo4nt5w6vivygtrkrhl46dy:
-    resolution: {integrity: sha512-LIcxEuFLEX65zTZ880F3aPZlFUeOO24ZTetig5E3JijEIjgRsYS5SvGD+8fNy9bCbzGqnV5eG9KCJwXTGd0v3A==}
+  /@aiou/eslint-config/1.0.5_bdjfo4nt5w6vivygtrkrhl46dy:
+    resolution: {integrity: sha512-xYVfXiwInTaLsxkL97++IaSg1WwtSDHsVwC9OlnJ+9Syf3it2ODxFWGiZeWrtZVIoUR1fxBiWm2hBJCkI9Slrg==}
     engines: {node: '>=16'}
     peerDependencies:
       eslint: '>=7.4.0 || ^8'

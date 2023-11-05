@@ -45,7 +45,7 @@
     "keyv": "^4.5.2"
   },
   "devDependencies": {
-    "@aiou/eslint-config": "^1.0.4",
+    "@aiou/eslint-config": "^1.0.5",
     "@changesets/cli": "^2.17.0",
     "@types/debug": "^4.1.7",
     "@types/lodash-es": "^4.17.10",
